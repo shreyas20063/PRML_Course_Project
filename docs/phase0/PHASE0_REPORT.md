@@ -13,6 +13,131 @@ branch `claude/pursuer-evader-sim-hxmdwu`, commit `b09bdfb` (2026-10-20).
 
 ---
 
+## UPDATE (2026-10-20, later): the student chose the CDC 2024 circle law ONLY
+
+Decision by the student: use only the **constant-circle law** of Singh & Chakraborty,
+"Planar Herding of Multiple Evaders by a Single Pursuer", IEEE CDC 2024, pp. 7375-7380,
+DOI 10.1109/CDC56724.2024.10886844 (a published paper, so it can be cited).
+The pursuer moves on a fixed circle of radius R at constant angular speed w (paper eq. (2)).
+This is the switching law with k1 = 0.
+
+Sections U1-U6 below replace Sections 1 and 3-7. Section 2 (data audit) is still valid.
+The old switching-law plan is kept below for the record, marked "superseded".
+
+### U1. Short answer (circle law)
+
+1. Old data: still **not usable** (Section 2). The GPU runs used the switching law, not the circle law.
+   **We must generate new data.**
+2. Big simplification [derived by us, please check]: scale lengths by R and time by 1/w.
+   Then the equations (paper eq. (5)) have **only one parameter**, gamma = k / (w R^3).
+   - Check: put u = R u', v = R v', t = s / w in eq. (5). You get
+     du'/ds = gamma (u' - 1)/d'^3 + v',  dv'/ds = gamma v'/d'^3 - u'.
+   - So R, k, w separately do not matter; only gamma matters (and time is counted in laps).
+3. Second simplification [paper, Section IV]: with this law the evaders do not affect each other, and the
+   pursuer does not react to them. So the flock succeeds **if and only if every evader succeeds alone**.
+   One evader's outcome depends only on (gamma, r_i(0)/R, psi_i(0)), where psi = angle relative to the pursuer.
+4. Pilot (rough) [measured]: losses are now **common**: 16-33 % of runs for N = 1, 3, 6 when gamma < 0.385,
+   and **100 %** (155 of 155) when gamma >= 0.385. So the loss class is no longer a problem.
+5. "Deadlock" = only "slow". In a 400-lap single-evader pilot, every run that had not settled had
+   gamma < 0.0072. Then the stable ring is tiny (r2* about gamma R) and the approach is very slow.
+6. Cost: about 1 core-second per single-evader run of 400 laps [measured]. A 20,000-run dataset is about
+   3 core-hours, i.e. under 1 hour on this container.
+7. **Main risk for the meeting**: the problem is now **low-dimensional** (one evader: 3 numbers), and the
+   true success boundary for one evader can be computed directly (the stable manifold of the saddle point
+   (r1*, psi1*)). This affects the grading criteria "novelty" and "technical complexity". See U6, Q-A.
+
+### U2. Labels for the circle law
+
+From code [from code]:
+- RnD `herding_sim.py:13, 42-44`: circle mode, theta = w t, radius R, k1 = 0.
+- `herding_sim.py:119-121`: r* = root of r^3 - R^2 r + k/w = 0 with 0 < r < R/sqrt3 (the paper's stable ring r2*).
+- `herding_sim.py:94-107`: per evader "escaped" (r > R), "gathered" (r <= rho, default rho = 0.3,
+  line 265), "in region" otherwise. Duration T = 60 time units by default (line 261). Euler, dt = 0.002 (line 268).
+- RnD `SESSION_NOTES.md:51-52`: the simulator reproduced the paper's r* = 0.1255 (w = 2) and 0.2541 (w = 1)
+  for R = 2, k = 1 to three decimals [RnD claim]. These are good test values for our own simulator.
+
+Proposed exact labels [proposal]:
+- **loss**: some evader has r_i > R (outside the pursuer circle) at any time before T_max
+  (or at T_max only; the student chooses), or the numbers blow up.
+  Always loss if gamma >= 2/(3 sqrt3) = 0.3849 (no ring exists, paper Lemma 2; pilot: 155/155 lost).
+  To check in Phase 1: can an evader that left the circle ever come back? If not, "any time" and "at T_max" agree.
+- **success**: every evader settles: abs(r_i - r2*)/r2* < eps_r and abs(psi_i - psi2*) < eps_psi for all lap ends
+  from t_s to T_max.
+- **herding time**: T_h = first such t_s, in laps. For the flock: the largest of the evaders' times.
+- **deadlock (not settled)**: neither. In the pilot this happens only for very small gamma (slow approach).
+  Honest name: "not settled by T_max".
+- Numbers to choose: T_max (we suggest 400 laps), eps_r (1 %), eps_psi (e.g. 0.05 rad), loss rule
+  (any time vs end), and the gamma range (we suggest log-uniform 1e-3 to 0.385, plus 10 % above 0.385).
+
+### U3. Theory to compare with (published CDC 2024 paper, plus the student's checks)
+
+| # | result | computable condition | type | where |
+|---|---|---|---|---|
+| P1 | ring exists | 0 < gamma = k/(w R^3) < 0.385 (exactly 2/(3 sqrt3)) | **Necessary** for success (if false, no ring, so no success) | paper Lemma 2, eq. (7) |
+| P2 | two rings, ordering | R > r1* > R/sqrt3 > r2* > 0, roots of r^3 - R^2 r + k/w = 0 | Fact | paper Lemma 3, eq. (9) |
+| P3 | stability | r2* ring asymptotically stable; r1* point a saddle | Local, sufficient near r2* | paper Theorem 5, Theorem 8 |
+| P4 | ROA ellipse | evader start inside the Lyapunov ellipse Omega (found numerically by optimisation, for given R, k, w) | **Sufficient** (inner estimate), conservative | paper Section III-C, Problem 6 |
+| P5 | ROA in the fixed frame | start inside the intersection of all rotated ellipses (a disk, Fig. 4) | Sufficient, any pursuer start | paper Section III-D, Definition 2 |
+| P6 | many evaders | every evader inside the P5 set | Sufficient for flock success | paper Theorem 11 |
+| P7 | small ring for fast pursuer | r2* -> 0 as w -> infinity | Fact | paper Lemma 4, Corollary 9 |
+
+What we can compare (plain words):
+- P1 is a sharp line (gamma = 0.385). The classifier should find it.
+- P4/P5 are inner estimates. We can measure **how much of the true success region they cover**
+  ("how conservative"), for each gamma.
+- We can also compute the true one-evader boundary directly (stable manifold of the saddle, backward
+  integration). This is the exact answer, and it is a strong check of the ML model.
+- Important change from BRIEF.md: these results are from the **published paper**, not from the student's own
+  proofs. The student's own RnD proofs (sqrt3 lemma for k1 > 0, zones, N = 1/N = 2 results) are about the
+  switching law and do **not** apply here. The student's own contribution for k1 = 0 is the validated simulator.
+  The BRIEF sentence "compare with conditions proven in the student's own RnD work" must be changed (Q-B).
+
+### U4. Generation plan with cost (circle law) [proposal]
+
+- Sample in the **dimensionless** form: gamma log-uniform in [1e-3, 0.385), plus 10 % in [0.385, 1].
+  Per evader: r(0)/R uniform in area on the disk (paper Assumption 1), psi(0) uniform in [0, 2 pi).
+  Optionally also report physical (R, k, w) values; they add nothing to the dynamics.
+- Latin hypercube over (log gamma, plus the N starting positions), stratified by N = 1..6.
+- Size: 3,000 runs per N = **18,000 runs**, plus 2,000 near gamma = 0.385 and near the true boundary = **20,000**.
+- GP classifier on a subset of n = 3,000 to 4,000 (exact GP is n^3). SVM and logistic regression on all.
+- Cost [measured]: about 1 core-second per single-evader run of 400 laps (400 runs in 108 s on 4 threads).
+  The cost grows about linearly with N for small N, so about 1-4 core-seconds per run:
+  **20,000 runs = 6 to 20 core-hours worst case, 2 to 5 hours wall** on this 4-core container.
+  Cheaper option: simulate single evaders only (one run per evader start) and build the flock label as
+  "all evaders succeed". That is exact for this law and costs about 1/3 of the above.
+- Exact reference boundary: for each of about 50 gamma values, integrate backward from the saddle point.
+  A few seconds per gamma.
+- Where: this cloud container only. Not the Mac, never the RnD Kaggle slots. We ask before any run over 10 minutes.
+
+### U5. Pilot evidence (circle law, rough) [measured]
+
+Details in `docs/phase0/bench/OUTPUT.md`.
+- `pilot_circle.py` (physical R, k, w; 100 laps; 300 runs per N): gamma < 0.385: lost 40 / 58 / 83 of about
+  250 (N = 1 / 3 / 6); gamma >= 0.385: all lost.
+- `pilot_circle2.py` (dimensionless, N = 1, 400 laps, 400 runs): lost 55, settled 224, not settled 121
+  (all with gamma < 0.0072). Settling lap: median 68, 90 % at 309, max 387.
+
+### U6. Open questions for the senior meeting (circle law)
+
+- **Q-A. Is it enough for the grading?** One evader is a 3-number problem with an exactly computable answer.
+  Ideas to keep it rich, for the student and the senior to choose (we do not decide):
+  (1) focus on herding time and its uncertainty (GP regression), which has no closed form;
+  (2) Bayes-risk decisions ("start herding now or reposition first?");
+  (3) learn the flock from features only and test on unseen N (the exact AND rule is the ground truth);
+  (4) measure how conservative the paper's ellipse estimate is, across all gamma.
+- **Q-B. BRIEF.md change**: theory now comes from the published CDC 2024 paper, not the student's own proofs.
+  The title and "contribution" sentences need new wording. Please confirm with the course instructor that this is fine.
+- **Q-C. Overlap**: the student's RnD notes mention a hardware study with this law (`SESSION_NOTES.md:31-37`).
+  Check with the guide that a course project on the same law does not clash with that paper.
+- **Q-D. Labels**: the 5 numbers in U2.
+- **Q-E. Simulator**: copying RnD files into `sim/` was blocked by the permission system (old Q6). We suggest
+  writing our own small simulator here and testing it against the paper's numbers (r* = 0.1255, 0.2541).
+- **Q-F. RnD-side audit**: still not in this repository; cross-check pending.
+
+---
+
+# Superseded: the switching-law version (kept for the record)
+
 ## 1. Short answer
 
 1. The old 393,216 GPU runs are **not usable** for this project. They did not save the starting

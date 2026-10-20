@@ -35,3 +35,18 @@ Four threads (`python bench.py 200 60 4`), wall time per run:
     settling lap, quantiles 50 / 90 / 99 / max: 24, 150, 264, 278
     beta = k k1^3 / w of the 46 never-settled runs: 29 of them < 0.05, all but one < 2.3, one at 35
     median beta of all 300 runs: 0.19
+
+## Circle law (CDC 2024, k1 = 0), added after the student's decision
+
+### pilot_circle.py (R in [0.5, 4], k log-uniform [0.1, 5], w log-uniform [0.3, 16]; starts in the disk of radius R; 100 laps)
+
+    N=1: k/(wR^3)<0.385: 251 -> conv 85, lost 40, other 126 | >=0.385: 49 -> lost 49, other 0
+    N=3: k/(wR^3)<0.385: 244 -> conv 63, lost 58, other 123 | >=0.385: 56 -> lost 56, other 0
+    N=6: k/(wR^3)<0.385: 250 -> conv 34, lost 83, other 133 | >=0.385: 50 -> lost 50, other 0
+
+### pilot_circle2.py (dimensionless R = w = 1, k = gamma log-uniform [1e-3, 0.385); N = 1; 400 laps; 400 runs)
+
+    lost 55 settled 224 other 121
+    settling lap quantiles 50/90/99/max: 67.5, 308.7, 381.2, 387
+    gamma of all 121 'other' runs: between 0.0011 and 0.0071 (slow approach to a tiny ring; r still decreasing)
+    wall time: 108 s on 4 threads (includes about 5 s of compilation) -> about 1 core-second per run

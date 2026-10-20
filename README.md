@@ -1,10 +1,10 @@
 # Where does herding succeed?
 
 EE604T (PRML) course project, IIT Dharwad.
-One pursuer herds N evaders to a goal. We simulate many starting configurations and parameters,
+One pursuer moving on a fixed circle (CDC 2024 law of Singh & Chakraborty) herds N evaders to a goal. We simulate many starting configurations and parameters,
 label each run (success / deadlock / loss, herding time), and learn the success region with classical ML
 (logistic regression, SVM, Gaussian processes, GMM/PCA, Bayes risk).
-Then we compare the learned region with conditions proven in the student's own RnD work.
+Then we compare the learned region with the paper's conditions and region-of-attraction estimate.
 Status: Phase 0 (data audit and plan) done; waiting for the student's decision before Phase 1.
 
 ## Folder map

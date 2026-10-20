@@ -4,11 +4,13 @@ To be filled as the project grows. One short answer per question. The student wr
 wording; the assistant only checks.
 
 ## The problem
-- What is herding here? One pursuer circles the goal; N evaders run away from it (speed k/d^2).
-  The pursuer radius follows the farthest evader: R_p = R exp(k1 (r_max - kappa)).
-- What are the three outcomes? success / deadlock / loss (exact rules: `docs/phase0/PHASE0_REPORT.md`, Section 3).
-- Why use ML if there are proofs? The proofs cover only part of the parameter space (zone A) or single points.
-  ML gives an estimate of the success region everywhere, with uncertainty.
+- What is herding here? One pursuer moves on a fixed circle (radius R, angular speed w) around the goal;
+  N evaders run away from it (speed k/d^2). This is the law of the CDC 2024 paper (Singh & Chakraborty).
+- Why does only gamma = k/(w R^3) matter? Measure lengths in units of R and time in units of 1/w;
+  then k, w, R appear only through gamma (derivation in the Phase 0 report, U1).
+- What are the three outcomes? success / deadlock / loss (exact rules: `docs/phase0/PHASE0_REPORT.md`, section U2).
+- Why use ML if there are results? The paper gives an inner (conservative) estimate of the success region.
+  ML estimates the whole region and the herding time, with uncertainty. (Final wording: after the senior meeting.)
 
 ## Data
 - How was the data made? (to fill after Phase 1)
