@@ -50,3 +50,17 @@ Four threads (`python bench.py 200 60 4`), wall time per run:
     settling lap quantiles 50/90/99/max: 67.5, 308.7, 381.2, 387
     gamma of all 121 'other' runs: between 0.0011 and 0.0071 (slow approach to a tiny ring; r still decreasing)
     wall time: 108 s on 4 threads (includes about 5 s of compilation) -> about 1 core-second per run
+
+## arXiv 2505.10048 law (fixed index, no switching), added 2026-10-21 after the student's decision
+
+### pilot_arxiv.py (parameters as RnD stress_test.py:76-89, kappa = r_0(0), tracked evader = farthest at t = 0; 150 laps; 300 runs per N; the SAME starts and parameters are run with both laws)
+
+    N=2 arXiv (fixed index) : lost  95/300 (mean evaders lost in lost runs 1.0), converged 154, other  51 | 13 s
+    N=2 switching           : lost   0/300, converged 201, other  99 | 14 s
+    N=3 arXiv (fixed index) : lost 131/300 (mean evaders lost in lost runs 1.6), converged 126, other  43 | 14 s
+    N=3 switching           : lost   0/300, converged 196, other 104 | 15 s
+    N=6 arXiv (fixed index) : lost 158/300 (mean evaders lost in lost runs 3.5), converged 121, other  21 | 18 s
+    N=6 switching           : lost   0/300, converged 195, other 105 | 21 s
+
+"lost" = some evader outside the pursuer circle at the end; "converged" = every evader within 1 % of r* in radius.
+Times are wall seconds on 4 threads -> about 0.2 core-seconds per run for 150 laps.

@@ -4,13 +4,16 @@ To be filled as the project grows. One short answer per question. The student wr
 wording; the assistant only checks.
 
 ## The problem
-- What is herding here? One pursuer moves on a fixed circle (radius R, angular speed w) around the goal;
-  N evaders run away from it (speed k/d^2). This is the law of the CDC 2024 paper (Singh & Chakraborty).
-- Why does only gamma = k/(w R^3) matter? Measure lengths in units of R and time in units of 1/w;
-  then k, w, R appear only through gamma (derivation in the Phase 0 report, U1).
-- What are the three outcomes? success / deadlock / loss (exact rules: `docs/phase0/PHASE0_REPORT.md`, section U2).
-- Why use ML if there are results? The paper gives an inner (conservative) estimate of the success region.
-  ML estimates the whole region and the herding time, with uncertainty. (Final wording: after the senior meeting.)
+- What is herding here? One pursuer circles the goal at angular speed w; N evaders run away from it (speed k/d^2).
+  Main law (arXiv 2505.10048): the pursuer radius is R exp(k1 (r_0(t) - kappa)), where r_0 is the distance of the
+  evader that was farthest at t = 0 (always the same evader), kappa = r_0(0).
+  Baseline (CDC 2024): the same with k1 = 0, i.e. a fixed circle of radius R.
+- Why only two parameters? Measure lengths in units of 1/k1 and time in units of 1/w; then only k1 R and
+  beta = k k1^3 / w remain (Phase 0 report, A1). For the circle law only gamma = k/(w R^3) remains (U1).
+- What are the three outcomes? success / deadlock / loss (exact rules: `docs/phase0/PHASE0_REPORT.md`, section A2).
+- Why use ML if there are theorems? The paper's theorems are local (near the equilibrium), and for the evaders that are
+  not tracked the paper has no estimate of the success region (only a brute-force figure). ML estimates that region
+  for any N, with uncertainty, and the herding time. (Final wording: after the senior meeting.)
 
 ## Data
 - How was the data made? (to fill after Phase 1)

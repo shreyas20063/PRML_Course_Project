@@ -16,5 +16,8 @@ What the student decided:
 - Project topic, toolbox and rules (`BRIEF.md`).
 - 2026-10-20: use only the constant-circle law of the published CDC 2024 paper (Singh & Chakraborty),
   not the switching law. The AI then updated the Phase 0 report (sections U1-U6) and ran two small circle-law pilots.
-- Pending (after the senior meeting, Wed Oct 21): the questions Q-A to Q-F in section U6 of the Phase 0 report,
+- 2026-10-21: after asking about the arXiv law, the student chose: main law = arXiv 2505.10048 (fixed tracked evader,
+  no switching), baseline = CDC 2024 circle law. The AI ran a pilot comparing the arXiv and switching laws, read the
+  arXiv paper's theorem list, and wrote sections A1-A6 of the Phase 0 report.
+- Pending (after the senior meeting, Wed Oct 21): the questions Q-1 to Q-7 in section A6 of the Phase 0 report,
   including the label numbers. No model has been built yet.

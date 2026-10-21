@@ -13,7 +13,129 @@ branch `claude/pursuer-evader-sim-hxmdwu`, commit `b09bdfb` (2026-10-20).
 
 ---
 
-## UPDATE (2026-10-20, later): the student chose the CDC 2024 circle law ONLY
+## CURRENT PLAN (2026-10-21): arXiv law (main) + circle law (baseline)
+
+Decision by the student: the **main controller** is the law of Singh & Chakraborty,
+"Planar Herding of Multiple Evaders with a Single Herder", arXiv 2505.10048 (public preprint, May 2025).
+The **baseline** is the CDC 2024 circle law (sections U1-U6 below, still valid for the baseline).
+The RnD switching law is not part of the project, except as one optional comparison (A6, Q-4).
+
+Sections A1-A6 are the current plan. Where they disagree with U1-U6 or with the old Sections 1-7, A1-A6 win.
+
+### A1. Short answer
+
+1. **The law** [paper, Eq. (3)]: pursuer at angle w t, radius R_p(t) = R exp(k1 (r_0(t) - kappa)).
+   e_0 = the evader farthest from the goal at t = 0. It stays the tracked evader for the whole run (no switching).
+   kappa := r_0(0). With k1 = 0 this becomes the circle law, so one simulator covers both.
+2. **Old data**: still not usable (Section 2). We generate new data.
+3. **Loss is common, and it grows with N** [measured, rough, 150 laps]: 32 % (N = 2), 44 % (N = 3),
+   53 % (N = 6) of runs lose an evader. The same starts with the switching law lose 0 %.
+   So the three classes are balanced, and N really matters (unlike the circle law).
+4. **The paper leaves a gap that ML fills**: for the evaders that are not tracked, the paper says there is no
+   efficient method to estimate their stability region (paper Eq. (24)); it gives only a brute-force figure (Fig. 3).
+   Learning this region, for any N, is our project.
+5. **Fewer parameters** [derived by us, please check]: put x~ = k1 x and s = w t. Then
+   dx~_i/ds = beta (x~_i - P~ e1)/d~^3 + (y~_i, -x~_i),  P~ = (k1 R) exp(r~_0 - kappa~),  beta = k k1^3 / w.
+   So only **two parameters**, k1 R and beta, plus the scaled starting positions (kappa~ = k1 r_0(0)).
+   Same as the RnD dimensionless form (`global/pass8/hunt/REPORT.md`, Section 0).
+6. **Cost** [measured]: about 0.2 core-seconds per run for 150 laps (N = 2..6).
+   The full plan (A4) is about 7 core-hours, about 2 hours on this container.
+
+### A2. Labels (arXiv law) [proposal]
+
+From code [from code]: the RnD repo has this law in `herding_sim.py:67-83` (fixed index i0, kappa = r_i0(0))
+and in `stray_test.py:14-35` (switch = False). Loss there = evader farther than 1.0 from the goal at T = 80
+(`stray_test.py:52`), or outside the pursuer circle (`stress_test.py:40`, switching law).
+
+Proposed exact labels:
+- **loss**: at T_max some evader has r_i > R_p (outside the pursuer circle), OR at any time r_i > r_esc,
+  OR the numbers blow up. (The paper does not define or discuss loss; this is our definition.)
+- **success**: every evader settles at the common equilibrium (r*, psi*) of paper Theorem 13:
+  abs(r_i - r*)/r* < eps_r and abs(psi_i - psi*) < eps_psi at every lap end from t_s to T_max.
+- **herding time**: T_h = first such t_s, in laps; for the flock, the time of the last evader.
+- **deadlock**: neither ("not settled by T_max"). Extra flag "stuck" vs "slow" as in old Section 3.2.
+- r* = root of r^3 - R_p(r)^2 r + k/w = 0, R_p(r) = R exp(k1 (r - kappa)); unique under paper Theorem 4.
+  Outside that condition there can be 3 roots; we use the one the tracked evader actually settles at,
+  and flag the run.
+- Numbers the student must choose: T_max (suggest 300 laps), eps_r (1 %), eps_psi (0.05 rad),
+  r_esc (suggest 10 max(R, kappa)), loss rule at T_max or at any time.
+
+### A3. Theory to compare with
+
+From the arXiv paper (public; theorem numbers from arXiv v1, HTML version):
+
+| # | result | condition | type |
+|---|---|---|---|
+| X1 | unique equilibrium of e_0 (Lemma 2, Theorem 4) | 2 k1^2 R^2 > 1 and kappa < ln(2 k1^2 R^2)/(2 k1), any k, w > 0 | sufficient for uniqueness |
+| X2 | e_0 asymptotically stable (Theorem 6) | same as X1 | local |
+| X3 | all evaders share the equilibrium (Theorem 13), and it is asymptotically stable (Theorem 15); stable limit cycle (Theorem 16) | same as X1 | local (near the equilibrium), not a statement about far starts |
+| X4 | small ring for fast pursuer (Lemma 14, Corollary 17) | w -> infinity gives r* -> 0 | fact |
+| X5 | ROA estimate for e_0 (Problem 10, Fig. 2) | start inside a Lyapunov ellipse, union over kappa | sufficient, conservative (paper Remark 11 says the true region is larger) |
+| X6 | ROA of the other evaders (Eq. (24), Fig. 3) | only brute force, no formula | **this is what we learn** |
+| X7 | circle law (baseline) | gamma = k/(w R^3) < 0.385 necessary; CDC ROA ellipse sufficient | see U3 |
+
+From the student's own RnD (only the parts that carry over; to confirm with the student):
+- The equilibrium equation of e_0 is the same as in the RnD note, so the student's larger uniqueness set
+  a = 2 k1^2 R^2 exp(-2 k1 kappa) > 6/e^2 (`paper/note.tex:599-638`) should also give a unique r* here
+  (the paper's X1 is a > 1). [to check with the student]
+- The RnD root-selection and local-stability proofs use switching, so they do **not** carry over.
+- RnD evidence that switching removes losses: 0/50 vs 32/50 runs with a lost evader (`stray_test.py:60-66`) [RnD claim];
+  our pilot agrees (A5).
+
+Plain words: X1 is a surface in parameter space (draw it on the learned map). X5 can be scored for
+"how conservative". X3 is local only, and our pilot shows many losses even under X1, so the learned map
+shows how far the local results reach.
+
+### A4. Generation plan with cost [proposal]
+
+- Sample in dimensionless form: k1 R in [0.3, 12] (log), beta = k k1^3/w in [1e-3, 50] (log), plus starts.
+  (Equivalent physical ranges: as RnD stress_test.py, k1 in [0.3, 3], R in [1, 4], w in [0.5, 16].)
+- Starts: kappa~ = k1 r_0(0) chosen so that the run lands in a stratum:
+  (i) inside X1 (a > 1); (ii) 6/e^2 < a <= 1; (iii) a <= 6/e^2. Other evaders inside the disk of radius kappa,
+  shapes: uniform disk, ring, cluster, two opposite groups (RnD `hunt/h1_sweep.py:3-10`).
+  Pursuer starts at angle 0; each evader's angle relative to it is a feature.
+- Latin hypercube in each cell (N = 1..6 x 3 strata = 18 cells), 3,000 runs per cell = 54,000,
+  plus 6,000 near the boundaries = **60,000 runs** (arXiv law).
+- Baseline: circle law (k1 = 0), **10,000 runs** (single-evader runs combined; exact for that law, see U1).
+- Optional: the same 60,000 starts with the switching law, for the comparison in A6 (Q-4): +60,000 runs.
+- GP classifier on a stratified subset n = 3,000 to 4,000 (exact GP is n^3); SVM / logistic regression on all.
+- Cost [measured]: 0.2 core-s per run at 150 laps, so about 0.4 core-s at 300 laps.
+  60,000 x 0.4 s = **about 7 core-hours = about 2 hours wall** on 4 cores; baseline about 1 more hour.
+  Plus 1 % re-checked with an adaptive accurate solver (about 1 core-hour).
+- Where: this cloud container. We ask before any run over 10 minutes. Never the RnD Kaggle slots.
+
+### A5. Pilot evidence [measured, rough]
+
+`docs/phase0/bench/pilot_arxiv.py`, output in `docs/phase0/bench/OUTPUT.md`. 300 runs per N, 150 laps,
+same starts for both laws:
+
+| N | arXiv: lost | arXiv: converged | arXiv: other | switching: lost |
+|---|---|---|---|---|
+| 2 | 95 | 154 | 51 | 0 |
+| 3 | 131 | 126 | 43 | 0 |
+| 6 | 158 | 121 | 21 | 0 |
+
+In lost runs, on average 1.0 / 1.6 / 3.5 evaders are lost (N = 2 / 3 / 6).
+
+### A6. Open questions for the senior meeting (current plan)
+
+- **Q-1. Overlap / confidentiality**: the student's RnD notes say the PhD student's under-review paper uses this same law
+  (`SESSION_NOTES.md:45-47`). We use only the public arXiv paper, never the under-review one. Please confirm with the
+  guide that a course project on this law is fine.
+- **Q-2. Which evader is tracked**: the paper says the farthest at t = 0. The RnD notes say the PhD student allows any
+  evader. We suggest the farthest (as in the paper).
+- **Q-3. Label numbers**: the 5 numbers in A2.
+- **Q-4. Switching-law comparison**: include the optional 60,000 switching runs ("where does switching fix the
+  arXiv law?")? It is a strong story, but it uses the student's RnD law; keep it as a short side result only.
+- **Q-5. BRIEF.md wording**: theory now comes mainly from the arXiv and CDC papers; the title and contribution
+  sentences need new wording (student's file; we did not edit it).
+- **Q-6. Simulator**: we suggest our own small simulator here (one code for k1 = 0 and k1 > 0), tested against the
+  paper numbers and, read-only, against the RnD code.
+- **Q-7. RnD-side audit**: still not in this repository; cross-check pending.
+
+---
+
+## EARLIER UPDATE (2026-10-20, later): the student chose the CDC 2024 circle law ONLY (now: baseline)
 
 Decision by the student: use only the **constant-circle law** of Singh & Chakraborty,
 "Planar Herding of Multiple Evaders by a Single Pursuer", IEEE CDC 2024, pp. 7375-7380,
