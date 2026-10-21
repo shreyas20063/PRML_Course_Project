@@ -65,4 +65,15 @@ large beta (10 to 50, stratum 1): 1,708 / 0 / 292.
 
 ## Accuracy check
 
-See `data/validation.json` (filled in below when the check finishes).
+`data/validate.py` re-ran a stratified 1 % sample (10 runs from every chunk) with scipy DOP853
+(rtol 1e-10, atol 1e-12) and applied the same label rules:
+
+| set | runs checked | same label | herding time difference |
+|---|---|---|---|
+| arXiv law | 600 | 600 (100 %) | 0 laps (all) |
+| circle law | 100 | 100 (100 %) | 0 laps (all) |
+
+Reference solver time: 604 s + 95 s (single core). Full result: `data/validation.json`.
+Simulator tests (`tests/test_sim.py`): CDC 2024 ring radii 0.2541 and 0.1255; arXiv running example
+r* = 0.4458, psi* = 1.1724; RK4 vs DOP853 state error < 1e-6; and the RnD result for the fixed-index law
+vs switching (32 of 50 vs 0 of 50 runs lose an evader) is reproduced exactly.

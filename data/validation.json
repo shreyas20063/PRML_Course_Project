@@ -1,0 +1,18 @@
+{
+ "arxiv": {
+  "checked": 600,
+  "label_agreement": 1.0,
+  "disagreements": [],
+  "herding_time_max_abs_diff_laps": 0.0,
+  "herding_time_median_abs_diff_laps": 0.0,
+  "reference_seconds_total": 604.1845262050629
+ },
+ "circle": {
+  "checked": 100,
+  "label_agreement": 1.0,
+  "disagreements": [],
+  "herding_time_max_abs_diff_laps": 0.0,
+  "herding_time_median_abs_diff_laps": 0.0,
+  "reference_seconds_total": 94.5193681716919
+ }
+}

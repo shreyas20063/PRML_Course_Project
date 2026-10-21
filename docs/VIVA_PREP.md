@@ -16,7 +16,12 @@ wording; the assistant only checks.
   for any N, with uncertainty, and the herding time. (Final wording: after the senior meeting.)
 
 ## Data
-- How was the data made? (to fill after Phase 1)
+- How was the data made? Our own simulator (RK4 with a step that shrinks when the pursuer passes close to an
+  evader), checked against the papers' numbers and against a high-accuracy solver (same label in 700 of 700 re-runs).
+  60,000 arXiv-law runs (N = 1..6, three parameter strata, Latin hypercube) and 10,000 circle-law runs, 300 laps each.
+  Details: `data/README.md`.
+- Why is "deadlock" mostly "slow"? When beta = k k1^3 / w is small, the push on the evaders is weak, and 300 laps are
+  not enough to settle. We call it "not settled by T_max", not "stuck".
 - Why Latin hypercube sampling? It spreads samples evenly along every parameter axis with few runs.
 - Why these features? (to fill) Why permutation-invariant? The order of evaders has no meaning.
 

@@ -19,5 +19,15 @@ What the student decided:
 - 2026-10-21: after asking about the arXiv law, the student chose: main law = arXiv 2505.10048 (fixed tracked evader,
   no switching), baseline = CDC 2024 circle law. The AI ran a pilot comparing the arXiv and switching laws, read the
   arXiv paper's theorem list, and wrote sections A1-A6 of the Phase 0 report.
-- Pending (after the senior meeting, Wed Oct 21): the questions Q-1 to Q-7 in section A6 of the Phase 0 report,
-  including the label numbers. No model has been built yet.
+- 2026-10-21: "go ahead" with Phase 1 using the default label numbers of A2 (T_max 300 laps, eps_r 1 %,
+  eps_psi 0.05 rad, r_esc 10 max(R, kappa) in scaled units, tracked evader = farthest at t = 0). No switching-law runs.
+- Still open: Q-1 (overlap check with the guide), Q-5 (BRIEF wording), and whether to keep these label numbers.
+
+## Phase 1 (2026-10-21)
+
+What the AI did:
+- Wrote our own simulator `sim/herding.py` and tests `tests/test_sim.py` (paper numbers, accurate-solver check,
+  reproduction of the RnD 32/50 vs 0/50 result).
+- Wrote and ran the generator (60,000 arXiv-law runs, 10,000 circle-law runs, about 50 minutes on 4 cores),
+  the labelling script and the 1 % accuracy check (100 % label agreement). Wrote `data/README.md`.
+- No model has been built yet.
