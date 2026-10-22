@@ -1,4 +1,4 @@
-# Where does herding succeed?
+# Probabilistic Prediction of Outcome and Herding Time in Single-Pursuer Multi-Evader Herding
 
 EE604T (PRML) course project, IIT Dharwad.
 One pursuer herds N evaders to a goal. Main law: Singh & Chakraborty, arXiv 2505.10048 (the pursuer radius follows the

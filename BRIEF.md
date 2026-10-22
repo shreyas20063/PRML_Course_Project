@@ -6,8 +6,8 @@ Toolbox: CLASSICAL ML from the syllabus: Bayes decision theory / Bayes risk, SVM
 Deliverables: code, Beamer slides, about 5-page IEEE double-column paper (Overleaf).
 Evaluation: Tue Nov 17, 2026: live demo + in-depth viva by TAs who do not follow control theory. The demo must explain itself visually.
 
-## Project (working title)
-"Where Does Herding Succeed? Learning the Success Region of a Pursuer-Evader Herding Controller and Testing It Against Proven Bounds"
+## Project (title)
+"Probabilistic Prediction of Outcome and Herding Time in Single-Pursuer Multi-Evader Herding"
 
 Question: given the starting configuration of N evaders and the pursuer, plus controller parameters, predict whether herding
 succeeds and how long it takes. Then compare the learned success region with conditions proven in the student's own RnD work.
