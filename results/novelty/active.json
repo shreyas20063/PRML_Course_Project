@@ -1,0 +1,508 @@
+{
+ "sizes": [
+  200,
+  300,
+  400,
+  500,
+  600,
+  700,
+  800,
+  900,
+  1000,
+  1250,
+  1500,
+  1750,
+  2000,
+  2250,
+  2500,
+  2750,
+  3000,
+  3250,
+  3500,
+  3750,
+  4000
+ ],
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "cost": [
+  [
+   0,
+   1,
+   1
+  ],
+  [
+   3,
+   0,
+   1
+  ],
+  [
+   10,
+   3,
+   0
+  ]
+ ],
+ "results": {
+  "random": {
+   "0": [
+    {
+     "balanced_accuracy": 0.8848196393723041,
+     "log_loss": 0.37911664559644737,
+     "bayes_cost": 0.32,
+     "n": 200,
+     "frac_loss_picked": 0.295
+    },
+    {
+     "balanced_accuracy": 0.9027562520077014,
+     "log_loss": 0.3268565938962595,
+     "bayes_cost": 0.279,
+     "n": 300,
+     "frac_loss_picked": 0.29333333333333333
+    },
+    {
+     "balanced_accuracy": 0.9170736529445008,
+     "log_loss": 0.28094721218151814,
+     "bayes_cost": 0.24583333333333332,
+     "n": 400,
+     "frac_loss_picked": 0.2775
+    },
+    {
+     "balanced_accuracy": 0.9177696725748685,
+     "log_loss": 0.25917354768962614,
+     "bayes_cost": 0.23008333333333333,
+     "n": 500,
+     "frac_loss_picked": 0.282
+    },
+    {
+     "balanced_accuracy": 0.9180651433611402,
+     "log_loss": 0.24530436512176187,
+     "bayes_cost": 0.20891666666666667,
+     "n": 600,
+     "frac_loss_picked": 0.3
+    },
+    {
+     "balanced_accuracy": 0.8269724213382995,
+     "log_loss": 2.0883318373268387,
+     "bayes_cost": 0.27216666666666667,
+     "n": 700,
+     "frac_loss_picked": 0.2957142857142857
+    },
+    {
+     "balanced_accuracy": 0.9242249755021733,
+     "log_loss": 0.22328453389737563,
+     "bayes_cost": 0.18775,
+     "n": 800,
+     "frac_loss_picked": 0.29375
+    },
+    {
+     "balanced_accuracy": 0.9203463748923492,
+     "log_loss": 0.22021448810617753,
+     "bayes_cost": 0.18116666666666667,
+     "n": 900,
+     "frac_loss_picked": 0.3011111111111111
+    },
+    {
+     "balanced_accuracy": 0.8605894410086935,
+     "log_loss": 1.789249340734795,
+     "bayes_cost": 0.24383333333333335,
+     "n": 1000,
+     "frac_loss_picked": 0.305
+    },
+    {
+     "balanced_accuracy": 0.8685833293420188,
+     "log_loss": 1.6919751943711978,
+     "bayes_cost": 0.22658333333333333,
+     "n": 1250,
+     "frac_loss_picked": 0.2984
+    },
+    {
+     "balanced_accuracy": 0.9279806408360147,
+     "log_loss": 0.19069953047925628,
+     "bayes_cost": 0.14916666666666667,
+     "n": 1500,
+     "frac_loss_picked": 0.294
+    },
+    {
+     "balanced_accuracy": 0.8839699140107892,
+     "log_loss": 1.3087095734918548,
+     "bayes_cost": 0.20308333333333334,
+     "n": 1750,
+     "frac_loss_picked": 0.292
+    },
+    {
+     "balanced_accuracy": 0.8681828771453818,
+     "log_loss": 2.133415302352708,
+     "bayes_cost": 0.21583333333333332,
+     "n": 2000,
+     "frac_loss_picked": 0.2915
+    },
+    {
+     "balanced_accuracy": 0.861789812163634,
+     "log_loss": 2.7524695186556722,
+     "bayes_cost": 0.21891666666666668,
+     "n": 2250,
+     "frac_loss_picked": 0.29644444444444445
+    },
+    {
+     "balanced_accuracy": 0.9307950720672055,
+     "log_loss": 0.17092830850603696,
+     "bayes_cost": 0.1345,
+     "n": 2500,
+     "frac_loss_picked": 0.2968
+    },
+    {
+     "balanced_accuracy": 0.9318315789561974,
+     "log_loss": 0.1680466430351089,
+     "bayes_cost": 0.13358333333333333,
+     "n": 2750,
+     "frac_loss_picked": 0.2963636363636364
+    },
+    {
+     "balanced_accuracy": 0.9326418492393583,
+     "log_loss": 0.16392770536740817,
+     "bayes_cost": 0.12783333333333333,
+     "n": 3000,
+     "frac_loss_picked": 0.295
+    },
+    {
+     "balanced_accuracy": 0.9325878021729522,
+     "log_loss": 0.16013650855367068,
+     "bayes_cost": 0.12275,
+     "n": 3250,
+     "frac_loss_picked": 0.29046153846153844
+    },
+    {
+     "balanced_accuracy": 0.9345231898404865,
+     "log_loss": 0.15697342975023557,
+     "bayes_cost": 0.12,
+     "n": 3500,
+     "frac_loss_picked": 0.29
+    },
+    {
+     "balanced_accuracy": 0.9355886882577117,
+     "log_loss": 0.15477864390261914,
+     "bayes_cost": 0.11825,
+     "n": 3750,
+     "frac_loss_picked": 0.2896
+    },
+    {
+     "balanced_accuracy": 0.8851821183734131,
+     "log_loss": 1.909507249388415,
+     "bayes_cost": 0.18341666666666667,
+     "n": 4000,
+     "frac_loss_picked": 0.288
+    }
+   ],
+   "1": [],
+   "2": []
+  },
+  "entropy": {
+   "0": [
+    {
+     "balanced_accuracy": 0.8848196393723041,
+     "log_loss": 0.37911664559644737,
+     "bayes_cost": 0.32,
+     "n": 200,
+     "frac_loss_picked": 0.295
+    },
+    {
+     "balanced_accuracy": 0.9005096937634884,
+     "log_loss": 0.30522824937973725,
+     "bayes_cost": 0.2495,
+     "n": 300,
+     "frac_loss_picked": 0.26
+    },
+    {
+     "balanced_accuracy": 0.910392911491963,
+     "log_loss": 0.256939269972079,
+     "bayes_cost": 0.205,
+     "n": 400,
+     "frac_loss_picked": 0.2675
+    },
+    {
+     "balanced_accuracy": 0.9127311733204736,
+     "log_loss": 0.2345679153386057,
+     "bayes_cost": 0.1795,
+     "n": 500,
+     "frac_loss_picked": 0.262
+    },
+    {
+     "balanced_accuracy": 0.9142796012624187,
+     "log_loss": 0.21655912873091715,
+     "bayes_cost": 0.172,
+     "n": 600,
+     "frac_loss_picked": 0.2733333333333333
+    },
+    {
+     "balanced_accuracy": 0.9194429235624139,
+     "log_loss": 0.20298011153243983,
+     "bayes_cost": 0.17075,
+     "n": 700,
+     "frac_loss_picked": 0.2714285714285714
+    },
+    {
+     "balanced_accuracy": 0.9218596635762921,
+     "log_loss": 0.19715252051876603,
+     "bayes_cost": 0.16983333333333334,
+     "n": 800,
+     "frac_loss_picked": 0.28125
+    },
+    {
+     "balanced_accuracy": 0.9230527094551976,
+     "log_loss": 0.1879661679897535,
+     "bayes_cost": 0.15458333333333332,
+     "n": 900,
+     "frac_loss_picked": 0.2866666666666667
+    },
+    {
+     "balanced_accuracy": 0.9263039071517637,
+     "log_loss": 0.18449917072853184,
+     "bayes_cost": 0.15,
+     "n": 1000,
+     "frac_loss_picked": 0.299
+    },
+    {
+     "balanced_accuracy": 0.9331819498786741,
+     "log_loss": 0.16687931562262376,
+     "bayes_cost": 0.138,
+     "n": 1250,
+     "frac_loss_picked": 0.316
+    },
+    {
+     "balanced_accuracy": 0.9377447968271099,
+     "log_loss": 0.1583100383524237,
+     "bayes_cost": 0.1385,
+     "n": 1500,
+     "frac_loss_picked": 0.3333333333333333
+    },
+    {
+     "balanced_accuracy": 0.9397189295179341,
+     "log_loss": 0.15566348769543728,
+     "bayes_cost": 0.14558333333333334,
+     "n": 1750,
+     "frac_loss_picked": 0.3382857142857143
+    },
+    {
+     "balanced_accuracy": 0.941171385125218,
+     "log_loss": 0.15454451183878273,
+     "bayes_cost": 0.15225,
+     "n": 2000,
+     "frac_loss_picked": 0.348
+    },
+    {
+     "balanced_accuracy": 0.9415444842398336,
+     "log_loss": 0.15324086497816972,
+     "bayes_cost": 0.15233333333333332,
+     "n": 2250,
+     "frac_loss_picked": 0.3586666666666667
+    },
+    {
+     "balanced_accuracy": 0.9424142377439093,
+     "log_loss": 0.15342455110387193,
+     "bayes_cost": 0.15358333333333332,
+     "n": 2500,
+     "frac_loss_picked": 0.3684
+    },
+    {
+     "balanced_accuracy": 0.9432445346494349,
+     "log_loss": 0.1515571476372301,
+     "bayes_cost": 0.14933333333333335,
+     "n": 2750,
+     "frac_loss_picked": 0.3749090909090909
+    },
+    {
+     "balanced_accuracy": 0.944912492835296,
+     "log_loss": 0.15138966883484423,
+     "bayes_cost": 0.15258333333333332,
+     "n": 3000,
+     "frac_loss_picked": 0.37833333333333335
+    },
+    {
+     "balanced_accuracy": 0.9455891058421609,
+     "log_loss": 0.15070456704099963,
+     "bayes_cost": 0.15033333333333335,
+     "n": 3250,
+     "frac_loss_picked": 0.3843076923076923
+    },
+    {
+     "balanced_accuracy": 0.9459312290114669,
+     "log_loss": 0.14846381947508605,
+     "bayes_cost": 0.14325,
+     "n": 3500,
+     "frac_loss_picked": 0.384
+    },
+    {
+     "balanced_accuracy": 0.9452489108931564,
+     "log_loss": 0.14730477330004801,
+     "bayes_cost": 0.13891666666666666,
+     "n": 3750,
+     "frac_loss_picked": 0.3874666666666667
+    },
+    {
+     "balanced_accuracy": 0.9469847180240917,
+     "log_loss": 0.14653560388091466,
+     "bayes_cost": 0.14,
+     "n": 4000,
+     "frac_loss_picked": 0.39025
+    }
+   ],
+   "1": [],
+   "2": []
+  },
+  "risk": {
+   "0": [
+    {
+     "balanced_accuracy": 0.8848196393723041,
+     "log_loss": 0.37911664559644737,
+     "bayes_cost": 0.32,
+     "n": 200,
+     "frac_loss_picked": 0.295
+    },
+    {
+     "balanced_accuracy": 0.8820361815508928,
+     "log_loss": 0.3623110960777279,
+     "bayes_cost": 0.29175,
+     "n": 300,
+     "frac_loss_picked": 0.19666666666666666
+    },
+    {
+     "balanced_accuracy": 0.8797983400727641,
+     "log_loss": 0.3510307357888405,
+     "bayes_cost": 0.27108333333333334,
+     "n": 400,
+     "frac_loss_picked": 0.1475
+    },
+    {
+     "balanced_accuracy": 0.8826122516717038,
+     "log_loss": 0.3318738791387204,
+     "bayes_cost": 0.249,
+     "n": 500,
+     "frac_loss_picked": 0.12
+    },
+    {
+     "balanced_accuracy": 0.8822565393838914,
+     "log_loss": 0.3248555631762568,
+     "bayes_cost": 0.2425,
+     "n": 600,
+     "frac_loss_picked": 0.1
+    },
+    {
+     "balanced_accuracy": 0.8873545679138551,
+     "log_loss": 0.29972506071084837,
+     "bayes_cost": 0.22291666666666668,
+     "n": 700,
+     "frac_loss_picked": 0.09285714285714286
+    },
+    {
+     "balanced_accuracy": 0.8881320110453329,
+     "log_loss": 0.2931468001614197,
+     "bayes_cost": 0.21191666666666667,
+     "n": 800,
+     "frac_loss_picked": 0.08125
+    },
+    {
+     "balanced_accuracy": 0.9002638888997083,
+     "log_loss": 0.2703518418129431,
+     "bayes_cost": 0.20233333333333334,
+     "n": 900,
+     "frac_loss_picked": 0.07777777777777778
+    },
+    {
+     "balanced_accuracy": 0.9014597847988063,
+     "log_loss": 0.2643079192495857,
+     "bayes_cost": 0.1935,
+     "n": 1000,
+     "frac_loss_picked": 0.071
+    },
+    {
+     "balanced_accuracy": 0.9112916773414245,
+     "log_loss": 0.23990431889663777,
+     "bayes_cost": 0.16691666666666666,
+     "n": 1250,
+     "frac_loss_picked": 0.06
+    },
+    {
+     "balanced_accuracy": 0.916806333320848,
+     "log_loss": 0.21760571356245692,
+     "bayes_cost": 0.14766666666666667,
+     "n": 1500,
+     "frac_loss_picked": 0.05733333333333333
+    },
+    {
+     "balanced_accuracy": 0.9170525378167378,
+     "log_loss": 0.21218766355720312,
+     "bayes_cost": 0.1405,
+     "n": 1750,
+     "frac_loss_picked": 0.06
+    },
+    {
+     "balanced_accuracy": 0.9182885456928704,
+     "log_loss": 0.20446377886483966,
+     "bayes_cost": 0.13283333333333333,
+     "n": 2000,
+     "frac_loss_picked": 0.066
+    },
+    {
+     "balanced_accuracy": 0.9185801859267531,
+     "log_loss": 0.19812054134845136,
+     "bayes_cost": 0.12291666666666666,
+     "n": 2250,
+     "frac_loss_picked": 0.06755555555555555
+    },
+    {
+     "balanced_accuracy": 0.9273594601309231,
+     "log_loss": 0.1798819102354708,
+     "bayes_cost": 0.11091666666666666,
+     "n": 2500,
+     "frac_loss_picked": 0.0716
+    },
+    {
+     "balanced_accuracy": 0.9303490692034947,
+     "log_loss": 0.1713979706166849,
+     "bayes_cost": 0.1055,
+     "n": 2750,
+     "frac_loss_picked": 0.07854545454545454
+    },
+    {
+     "balanced_accuracy": 0.9315874895525571,
+     "log_loss": 0.17147310141033723,
+     "bayes_cost": 0.10316666666666667,
+     "n": 3000,
+     "frac_loss_picked": 0.08466666666666667
+    },
+    {
+     "balanced_accuracy": 0.9345902243081593,
+     "log_loss": 0.171049154747996,
+     "bayes_cost": 0.09866666666666667,
+     "n": 3250,
+     "frac_loss_picked": 0.09446153846153846
+    },
+    {
+     "balanced_accuracy": 0.9362905462102278,
+     "log_loss": 0.16816873273070643,
+     "bayes_cost": 0.09566666666666666,
+     "n": 3500,
+     "frac_loss_picked": 0.10228571428571429
+    },
+    {
+     "balanced_accuracy": 0.9369846022406714,
+     "log_loss": 0.16636287072738332,
+     "bayes_cost": 0.09508333333333334,
+     "n": 3750,
+     "frac_loss_picked": 0.11013333333333333
+    },
+    {
+     "balanced_accuracy": 0.9371107619314545,
+     "log_loss": 0.16139265693482138,
+     "bayes_cost": 0.09766666666666667,
+     "n": 4000,
+     "frac_loss_picked": 0.1145
+    }
+   ],
+   "1": [],
+   "2": []
+  }
+ }
+}
