@@ -23,11 +23,22 @@ wording; the assistant only checks.
 - Why is "deadlock" mostly "slow"? When beta = k k1^3 / w is small, the push on the evaders is weak, and 300 laps are
   not enough to settle. We call it "not settled by T_max", not "stuck".
 - Why Latin hypercube sampling? It spreads samples evenly along every parameter axis with few runs.
-- Why these features? (to fill) Why permutation-invariant? The order of evaders has no meaning.
+- Why these features? They describe only the start: parameters (q, beta, kappa, a), the shape of the flock (radii,
+  angular spread, pairwise distances, hull area), and where the evaders are relative to the pursuer, the tracked evader
+  and the equilibrium point. Lengths are divided by kappa so flocks of different size are comparable.
+- Why permutation-invariant? The order of evaders has no meaning; means, minima and spreads do not change if we
+  renumber the evaders, and they exist for any N (needed for the unseen-N test).
 
 ## Models (to fill, one paragraph each: what it does, why chosen, what can go wrong)
-- Logistic regression (baseline)
-- RBF-SVM
+- Logistic regression (baseline): a linear boundary between classes; it gives probabilities. Chosen as the simplest
+  model. Result: 82.5 % balanced accuracy; it misses the curved boundary.
+- RBF-SVM: draws a curved boundary using a similarity (kernel) between runs; gamma sets how local the similarity is,
+  C how much training errors cost. Result: 93.9 % balanced accuracy, 92.8 % on unseen N = 5, 6. Weak point: no
+  calibrated probabilities.
+- Why balanced accuracy? It averages the recall of the three classes, so a model cannot score well by always
+  guessing the largest class (that would give 33 %).
+- Why is the theory rule so weak (46 %)? The theorem is local (near the equilibrium); it does not say what happens
+  from far starts. That gap is the point of the project.
 - Gaussian process classifier (calibrated probabilities, uncertainty near the boundary)
 - GP / kernel regression for herding time
 - GMM + PCA (do regimes appear without labels?)

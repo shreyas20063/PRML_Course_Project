@@ -6,7 +6,7 @@ evader that was farthest at t = 0). Baseline: their CDC 2024 fixed-circle law. W
 label each run (success / deadlock / loss, herding time), and learn the success region with classical ML
 (logistic regression, SVM, Gaussian processes, GMM/PCA, Bayes risk).
 Then we compare the learned region with the papers' conditions and region-of-attraction estimates.
-Status: Phase 1 (data) done: 70,000 simulated runs with labels, checked. Next: Phase 2 (baseline models).
+Status: Phase 2 (baselines) done: RBF-SVM 93.9 % balanced accuracy (arXiv law), 92.8 % on unseen N. Next: Phase 3 (GP, calibration, Bayes risk).
 
 ## Folder map
 - `BRIEF.md` - project scope, rules, milestones
@@ -14,5 +14,6 @@ Status: Phase 1 (data) done: 70,000 simulated runs with labels, checked. Next: P
 - `docs/phase0/bench/` - cost benchmark and pilot scripts with their output
 - `sim/` - our simulator; `tests/` - its checks
 - `data/` - generator, labels, accuracy check, raw runs (`data/README.md`)
+- `models/` - features and models; `results/` - metrics, figures, phase reports
 - `docs/VIVA_PREP.md` - plain-words viva notes (grows with the project)
 - `docs/AI_USE_NOTE.md` - what the AI did, what the student decided

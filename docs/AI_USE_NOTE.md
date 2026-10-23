@@ -31,3 +31,12 @@ What the AI did:
 - Wrote and ran the generator (60,000 arXiv-law runs, 10,000 circle-law runs, about 50 minutes on 4 cores),
   the labelling script and the 1 % accuracy check (100 % label agreement). Wrote `data/README.md`.
 - No model has been built yet.
+
+## Phase 2 (2026-10-23)
+
+What the student decided: title "Probabilistic Prediction of Outcome and Herding Time in Single-Pursuer Multi-Evader
+Herding"; planned extensions (active learning, censored herding time); "go" for Phase 2.
+
+What the AI did: wrote the features (`models/features.py`) and the baselines (`models/baselines.py`): majority class,
+theory rule, logistic regression, RBF-SVM; fixed stratified test set; unseen-N test; circle-law baseline. Wrote
+`results/phase2/REPORT.md`. All numbers are from these scripts.
