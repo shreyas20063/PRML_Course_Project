@@ -199,7 +199,155 @@
    "2": []
   },
   "entropy": {
-   "0": [],
+   "0": [
+    {
+     "balanced_accuracy": 0.886331711411206,
+     "log_loss": 0.3607218974056894,
+     "bayes_cost": 0.32708333333333334,
+     "n": 200,
+     "frac_loss_picked": 0.295
+    },
+    {
+     "balanced_accuracy": 0.9121685237278431,
+     "log_loss": 0.3011347847445932,
+     "bayes_cost": 0.2575,
+     "n": 300,
+     "frac_loss_picked": 0.24666666666666667
+    },
+    {
+     "balanced_accuracy": 0.917797117233288,
+     "log_loss": 0.27249391637701686,
+     "bayes_cost": 0.2325,
+     "n": 400,
+     "frac_loss_picked": 0.295
+    },
+    {
+     "balanced_accuracy": 0.9204747109432176,
+     "log_loss": 0.2529771779070011,
+     "bayes_cost": 0.22108333333333333,
+     "n": 500,
+     "frac_loss_picked": 0.298
+    },
+    {
+     "balanced_accuracy": 0.9204002836769916,
+     "log_loss": 0.23670084067408473,
+     "bayes_cost": 0.19808333333333333,
+     "n": 600,
+     "frac_loss_picked": 0.2866666666666667
+    },
+    {
+     "balanced_accuracy": 0.9175742243916879,
+     "log_loss": 0.22854245590662187,
+     "bayes_cost": 0.19683333333333333,
+     "n": 700,
+     "frac_loss_picked": 0.30142857142857143
+    },
+    {
+     "balanced_accuracy": 0.9202245628506766,
+     "log_loss": 0.21717280867709374,
+     "bayes_cost": 0.18325,
+     "n": 800,
+     "frac_loss_picked": 0.29875
+    },
+    {
+     "balanced_accuracy": 0.9230666029102638,
+     "log_loss": 0.2067849852030986,
+     "bayes_cost": 0.18091666666666667,
+     "n": 900,
+     "frac_loss_picked": 0.30444444444444446
+    },
+    {
+     "balanced_accuracy": 0.9274573960655083,
+     "log_loss": 0.20205216568046203,
+     "bayes_cost": 0.17866666666666667,
+     "n": 1000,
+     "frac_loss_picked": 0.307
+    },
+    {
+     "balanced_accuracy": 0.9359701089266511,
+     "log_loss": 0.1792453823651803,
+     "bayes_cost": 0.16058333333333333,
+     "n": 1250,
+     "frac_loss_picked": 0.3104
+    },
+    {
+     "balanced_accuracy": 0.9384411087670969,
+     "log_loss": 0.17641332169233165,
+     "bayes_cost": 0.16083333333333333,
+     "n": 1500,
+     "frac_loss_picked": 0.318
+    },
+    {
+     "balanced_accuracy": 0.9390004707922722,
+     "log_loss": 0.17465690859331523,
+     "bayes_cost": 0.15475,
+     "n": 1750,
+     "frac_loss_picked": 0.332
+    },
+    {
+     "balanced_accuracy": 0.9422193047726308,
+     "log_loss": 0.16763091940547853,
+     "bayes_cost": 0.14908333333333335,
+     "n": 2000,
+     "frac_loss_picked": 0.343
+    },
+    {
+     "balanced_accuracy": 0.9415669025179754,
+     "log_loss": 0.1648635087084976,
+     "bayes_cost": 0.14316666666666666,
+     "n": 2250,
+     "frac_loss_picked": 0.34755555555555556
+    },
+    {
+     "balanced_accuracy": 0.943066911491032,
+     "log_loss": 0.1617244945532649,
+     "bayes_cost": 0.13358333333333333,
+     "n": 2500,
+     "frac_loss_picked": 0.3576
+    },
+    {
+     "balanced_accuracy": 0.9449889019830685,
+     "log_loss": 0.16036987157152746,
+     "bayes_cost": 0.13483333333333333,
+     "n": 2750,
+     "frac_loss_picked": 0.3643636363636364
+    },
+    {
+     "balanced_accuracy": 0.9443583188248453,
+     "log_loss": 0.15776727855272485,
+     "bayes_cost": 0.131,
+     "n": 3000,
+     "frac_loss_picked": 0.36533333333333334
+    },
+    {
+     "balanced_accuracy": 0.9447064747948387,
+     "log_loss": 0.1571552682376109,
+     "bayes_cost": 0.128,
+     "n": 3250,
+     "frac_loss_picked": 0.36923076923076925
+    },
+    {
+     "balanced_accuracy": 0.9452218475852243,
+     "log_loss": 0.1568712874120296,
+     "bayes_cost": 0.13291666666666666,
+     "n": 3500,
+     "frac_loss_picked": 0.37285714285714283
+    },
+    {
+     "balanced_accuracy": 0.9457760215956751,
+     "log_loss": 0.156366778021996,
+     "bayes_cost": 0.1345,
+     "n": 3750,
+     "frac_loss_picked": 0.3741333333333333
+    },
+    {
+     "balanced_accuracy": 0.9457418654054003,
+     "log_loss": 0.15527478183692692,
+     "bayes_cost": 0.13483333333333333,
+     "n": 4000,
+     "frac_loss_picked": 0.3765
+    }
+   ],
    "1": [],
    "2": []
   },
