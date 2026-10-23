@@ -6,8 +6,10 @@ evader that was farthest at t = 0). Baseline: their CDC 2024 fixed-circle law. W
 label each run (success / deadlock / loss, herding time), and learn the success region with classical ML
 (logistic regression, SVM, Gaussian processes, GMM/PCA, Bayes risk).
 Then we compare the learned region with the papers' conditions and region-of-attraction estimates.
-Status: Phase 3 done: GP classifier best calibrated (log-loss 0.155), Bayes rule cuts the worst mistake 174 -> 12,
-herding time within 0.7 laps (90 % bands hold 89 %), learned map agrees with fresh simulation on 97 %. Next: theory comparison, extensions, demo.
+Status: Phase 3 done: GP classifier best calibrated (log-loss 0.162), Bayes rule cuts the worst mistake 169 -> 9,
+herding time within 0.7 laps (90 % bands hold 89 %), learned map agrees with fresh simulation on 97 %.
+Novelty: risk-aware active learning needs 2.3x fewer simulations for the same decision cost (`results/novelty/`).
+Next: censored herding time, theory comparison, demo.
 
 ## Folder map
 - `BRIEF.md` - project scope, rules, milestones
@@ -15,6 +17,6 @@ herding time within 0.7 laps (90 % bands hold 89 %), learned map agrees with fre
 - `docs/phase0/bench/` - cost benchmark and pilot scripts with their output
 - `sim/` - our simulator; `tests/` - its checks
 - `data/` - generator, labels, accuracy check, raw runs (`data/README.md`)
-- `models/` - features and models; `results/` - metrics, figures, phase reports
+- `models/` - features and models; `results/` - metrics, figures, phase reports (`results/novelty/` = active learning)
 - `docs/VIVA_PREP.md` - plain-words viva notes (grows with the project)
 - `docs/AI_USE_NOTE.md` - what the AI did, what the student decided

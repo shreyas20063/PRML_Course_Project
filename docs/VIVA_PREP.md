@@ -41,14 +41,19 @@ wording; the assistant only checks.
   from far starts. That gap is the point of the project.
 - Gaussian process classifier: puts a smooth random function behind the class probabilities; the kernel says that
   similar starts give similar outcomes, and one length scale per feature says how fast things change along it.
-  Result: best probabilities (log-loss 0.155, Brier 0.090) with only 4,000 training runs; when it is unsure it is
-  usually wrong, so answering only the most confident 80 % gives 98.9 % accuracy.
+  Result: best probabilities (log-loss 0.162, Brier 0.092) with only 4,000 training runs; when it is unsure it is
+  usually wrong, so answering only the most confident 80 % gives 98.6 % accuracy.
+- Why is the GP signal variance capped at 100? Without the cap the GP became over-confident on some training sets
+  (3 of 6 random sets were clearly worse). With the cap all 7 sets we tried give almost the same score (0.936-0.938).
 - Why only 4,000 runs for the GP? Exact GP needs an n x n matrix inverse: cost grows as n^3. Settings tuned on 1,000.
 - Calibration: "80 % sure" should be right 80 % of the time. Reliability diagram = predicted vs observed frequency.
 - Bayes-risk rule: choose the decision with the smallest expected cost, sum of P(class) x cost. With costs where losing
-  an evader is worst, it cut "loss called success" from 174 to 12 test runs.
+  an evader is worst, it cut "loss called success" from 169 to 9 test runs.
 - GP regression for herding time: predicts log(1 + time) with a 90 % band; typical error 0.7 laps; the band holds the
   truth 89 % of the time.
+- Active learning (our novelty): the GP chooses which simulation to run next. "Entropy" = where it is least sure;
+  "risk-aware" = where the best decision is most costly (Bayes risk). Risk-aware reaches random sampling's decision
+  cost with 2.3x fewer runs; entropy reaches its accuracy with 2.7x fewer. Each wins on what it aims for.
 - GMM + PCA (do regimes appear without labels?)
 - Bayes-risk decision rule (loss costs more than deadlock)
 
@@ -66,5 +71,7 @@ wording; the assistant only checks.
 - `results/phase3/map.png`: one 3-evader flock; left = simulation, middle = GP, right = GP P(loss). Dashed line = arXiv
   condition a = 1. Losses also happen right of the line: the theorem is local.
 - `results/phase3/time.png`: predicted vs true herding time with 90 % bands; and the censoring check.
+- `results/novelty/active.png`: quality vs number of simulations for three ways of choosing runs; green (risk-aware)
+  has the lowest decision cost, orange (entropy) the best accuracy.
 
 ## Likely TA questions (to fill)

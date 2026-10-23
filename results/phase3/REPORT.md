@@ -7,8 +7,9 @@ Code: `models/gp_classify.py`, `models/gp_time.py`, `models/gp_map.py`. Numbers:
 ## Setup (plain words)
 
 - **GP classifier**: one GP per class ("this class or not"), Laplace approximation, kernel = constant x RBF with
-  one length scale per feature. Exact GP cost grows as n^3, so the kernel settings were tuned on 1,000 training runs
-  (272 s) and the GP was then fitted on 4,000 runs with those settings fixed (54 s).
+  one length scale per feature; the signal variance is capped at 100 (see "Stability" below). Exact GP cost grows
+  as n^3, so the kernel settings were tuned on 1,000 training runs (404 s) and the GP was then fitted on 4,000 runs
+  with those settings fixed (35 s).
 - **Compared with**: logistic regression (all 48,000 training runs), and the RBF-SVM made probabilistic with Platt
   scaling (a logistic curve fitted on the SVM's scores), trained on 4,000 runs (same as the GP) and on 20,000 runs.
 - **Scores for probabilities** (lower is better):
@@ -23,10 +24,10 @@ Code: `models/gp_classify.py`, `models/gp_time.py`, `models/gp_map.py`. Numbers:
 | logistic regression | 48,000 | 0.830 | 0.825 | 0.482 | 0.258 | 0.039 |
 | SVM + Platt | 4,000 | 0.920 | 0.918 | 0.254 | 0.130 | 0.034 |
 | SVM + Platt | 20,000 | 0.940 | 0.938 | 0.200 | 0.099 | 0.021 |
-| **GP classifier** | **4,000** | 0.939 | 0.936 | **0.155** | **0.090** | **0.020** |
+| **GP classifier** | **4,000** | 0.940 | 0.937 | **0.162** | **0.092** | 0.028 |
 
 With the same 4,000 runs, the GP beats the SVM on every score. It even beats the SVM trained on 5 times more data on
-log-loss and Brier score, at the same accuracy. Figure: `reliability.png` (points near the diagonal = honest probabilities).
+log-loss and Brier score, at the same accuracy (its ECE, 0.028, is slightly worse than that SVM's 0.021). Figure: `reliability.png` (points near the diagonal = honest probabilities).
 
 ## 2. Uncertainty is useful (selective prediction)
 
@@ -34,10 +35,10 @@ If the model answers only its most confident runs and says "not sure" for the re
 
 | fraction answered | 100 % | 90 % | 80 % | 70 % | 50 % |
 |---|---|---|---|---|---|
-| GP accuracy | 0.939 | 0.972 | 0.989 | 0.995 | 1.000 |
+| GP accuracy | 0.940 | 0.973 | 0.986 | 0.995 | 0.999 |
 | SVM + Platt (20k) | 0.940 | 0.963 | 0.972 | 0.974 | 0.980 |
 
-The GP's uncertainty points at its mistakes: mean entropy 0.61 on wrong answers vs 0.17 on right answers.
+The GP's uncertainty points at its mistakes: mean entropy 0.63 on wrong answers vs 0.20 on right answers.
 Figure: `selective.png`.
 
 ## 3. Bayes-risk decisions (asymmetric costs)
@@ -48,7 +49,7 @@ The Bayes rule picks the decision with the lowest expected cost, sum over classe
 
 | model | mean cost, most-probable class | mean cost, Bayes rule | losses called "success": most probable -> Bayes |
 |---|---|---|---|
-| GP | 0.216 | **0.120** | 174 -> **12** |
+| GP | 0.209 | **0.123** | 169 -> **9** |
 | SVM + Platt (20k) | 0.191 | 0.141 | 144 -> 17 |
 | logistic regression | 0.584 | 0.319 | 461 -> 6 |
 
@@ -83,15 +84,24 @@ fresh (not in the training data). The GP's most probable class agrees with the s
 ## What the GP length scales say (ARD)
 
 A short length scale = the class changes quickly with that feature = important. For all three classes the shortest
-are log(r*/kappa) (0.9 to 1.6) and log(q/kappa) (2.0 to 2.4), then kappa and log(beta). Plain words: what matters most is
-how big the equilibrium ring and the pursuer circle are compared with the flock, and how strong the push is.
-14 to 16 of the 24 features were switched off (length scale at the upper bound).
+is log(r*/kappa) (1.0 to 1.2), then log(q/kappa) (1.6 to 2.1); then log(beta), log(a) and kappa. Plain words: what
+matters most is how big the equilibrium ring and the pursuer circle are compared with the flock, and how strong the push
+is. 6 to 10 of the 24 features were switched off (length scale at the upper bound).
 Caution: log(a) looks unimportant here only because it is a combination of log q and kappa, which are already features;
 it does not mean the theorem's quantity is irrelevant.
 
 ## Honest limits
 
 - The GP was trained on 4,000 runs (exact GP cost); kernel settings come from 1,000 runs. A larger GP may do better.
+
+## Stability (found and fixed, 2026-10-23)
+
+The first version let the GP signal variance grow freely; the tuned "success" kernel reached ~2,050. With that kernel,
+3 of 6 random 4,000-run training sets gave a strongly over-confident success-vs-rest GP (accuracy 0.86 / 0.90 / 0.93
+instead of 0.96; up to 853 test runs wrong at more than 99 % confidence). The first Phase 3 numbers happened to use a
+good set. Fix: cap the signal variance at 100. Now 7 training sets give balanced accuracy 0.936-0.938, log-loss
+0.162-0.166, Bayes cost 0.121-0.129 (`results/phase3/stability.txt`, `models/gp_stability.py`). All numbers in this
+report are from the fixed version; the map agreement (97.3 %) did not change.
 - The cost matrix is our proposal; results depend on it.
 - Herding time is modelled on successful runs only; the proper censored model is a planned extension.
 - One map is one flock; other flocks give other maps.

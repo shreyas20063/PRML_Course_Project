@@ -50,7 +50,7 @@ Demo: small app (Streamlit or similar): choose N, drag/slide starting positions 
 predicted time +- uncertainty -> press play to animate the real simulation.
 
 Planned extensions (same title; the student decides which to keep):
-- Planned now: (1) active learning with the GP classifier: the GP chooses the next simulation where it is least sure;
+- Planned now: (1) [done 2026-10-23, results/novelty/] active learning with the GP classifier: the GP chooses the next simulation where it is least sure;
   compare the number of runs needed with random sampling. (2) Censored herding time: runs not settled by T_max give only
   "time > T_max"; use a censored (survival-style) regression instead of dropping them.
 - If time allows: (3) set kernels that compare two flocks as sets of points, for any N (stronger unseen-N test);

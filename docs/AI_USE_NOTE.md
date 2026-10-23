@@ -47,3 +47,10 @@ What the AI did: GP classifier (one-vs-rest, kernel tuned on 1,000 runs, fitted 
 regression and SVM + Platt, calibration scores and plots, selective prediction, Bayes-risk rule (cost matrix proposed by
 the AI, to be chosen by the student), GP regression for herding time, a 40 x 40 map checked against fresh simulations.
 Found and fixed two bugs (log-loss column order, tiny negative probability). Wrote `results/phase3/REPORT.md`.
+
+## Novelty experiment (2026-10-23)
+
+What the student decided: "we need novelty, do something".
+What the AI did: proposed and ran risk-aware active learning (`models/active.py`), checked related work with a web
+search, found and fixed a GP over-confidence problem (signal-variance cap, `models/gp_stability.py`), re-ran Phase 3
+with the fix and corrected its report. Wrote `results/novelty/README.md`.

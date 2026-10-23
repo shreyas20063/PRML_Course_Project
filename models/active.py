@@ -13,6 +13,7 @@ then +250 up to 4,000. To keep batches diverse, each batch is the top runs among
 Scores on the fixed test set (12,000 runs) after every batch: balanced accuracy, log-loss, mean Bayes cost.
 
 usage: python models/active.py  ->  results/novelty/active.json, results/novelty/active.png
+       python models/active.py --plot   (redraw the figure only)
 """
 import os, sys, json, time
 import numpy as np
@@ -48,8 +49,30 @@ def score(P, how):
     return np.min(P @ COST, 1)                       # risk: expected cost of the best decision
 
 
+def plot(res):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4))
+    lab = {"random": "random runs", "entropy": "most unsure (entropy)", "risk": "risk-aware (Bayes cost)"}
+    for ax, metric, title in zip(axes, ("bayes_cost", "log_loss", "balanced_accuracy"),
+                                 ("mean Bayes cost (lower is better)", "log-loss (lower is better)",
+                                  "balanced accuracy (higher is better)")):
+        for how in STRATEGIES:
+            A = np.array([[r[metric] for r in res[how][str(s)]] for s in SEEDS])
+            ns = [r["n"] for r in res[how][str(SEEDS[0])]]
+            ax.plot(ns, A.mean(0), "o-", ms=3, label=lab[how])
+            ax.fill_between(ns, A.min(0), A.max(0), alpha=0.2)
+        ax.set_xscale("log"); ax.set_xticks([200, 500, 1000, 2000, 4000], ["200", "500", "1000", "2000", "4000"]); ax.minorticks_off(); ax.set_xlabel("number of simulations used for training"); ax.set_title(title, fontsize=10)
+    axes[0].legend(fontsize=8)
+    fig.suptitle("Choosing which simulations to run (3 repeats; band = min to max)", fontsize=11)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, "active.png"), dpi=130)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
+    if sys.argv[1:] == ["--plot"]:            # redraw the figure from the saved results
+        plot(json.load(open(os.path.join(OUT, "active.json")))["results"]); sys.exit()
     X, names, y, T_h, meta = arxiv_table()
     tr, te = test_split(y, meta["N"], SEED)
     sc = StandardScaler().fit(X[tr]); Z = sc.transform(X)
@@ -96,21 +119,4 @@ if __name__ == "__main__":
     print(json.dumps(summ, indent=1))
     json.dump(dict(sizes=SIZES, seeds=list(SEEDS), cost=COST.tolist(), results=res, summary=summ),
               open(os.path.join(OUT, "active.json"), "w"), indent=1)
-
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4))
-    lab = {"random": "random runs", "entropy": "most unsure (entropy)", "risk": "risk-aware (Bayes cost)"}
-    for ax, metric, title in zip(axes, ("bayes_cost", "log_loss", "balanced_accuracy"),
-                                 ("mean Bayes cost (lower is better)", "log-loss (lower is better)",
-                                  "balanced accuracy (higher is better)")):
-        for how in STRATEGIES:
-            A = np.array([[r[metric] for r in res[how][str(s)]] for s in SEEDS])
-            ns = [r["n"] for r in res[how][str(SEEDS[0])]]
-            ax.plot(ns, A.mean(0), "o-", ms=3, label=lab[how])
-            ax.fill_between(ns, A.min(0), A.max(0), alpha=0.2)
-        ax.set_xscale("log"); ax.set_xlabel("number of simulations used for training"); ax.set_title(title, fontsize=10)
-    axes[0].legend(fontsize=8)
-    fig.suptitle("Choosing which simulations to run (3 repeats; band = min to max)", fontsize=11)
-    fig.tight_layout(); fig.savefig(os.path.join(OUT, "active.png"), dpi=130)
+    plot(res)
