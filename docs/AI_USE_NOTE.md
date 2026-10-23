@@ -40,3 +40,10 @@ Herding"; planned extensions (active learning, censored herding time); "go" for 
 What the AI did: wrote the features (`models/features.py`) and the baselines (`models/baselines.py`): majority class,
 theory rule, logistic regression, RBF-SVM; fixed stratified test set; unseen-N test; circle-law baseline. Wrote
 `results/phase2/REPORT.md`. All numbers are from these scripts.
+
+## Phase 3 (2026-10-23)
+
+What the AI did: GP classifier (one-vs-rest, kernel tuned on 1,000 runs, fitted on 4,000), comparison with logistic
+regression and SVM + Platt, calibration scores and plots, selective prediction, Bayes-risk rule (cost matrix proposed by
+the AI, to be chosen by the student), GP regression for herding time, a 40 x 40 map checked against fresh simulations.
+Found and fixed two bugs (log-loss column order, tiny negative probability). Wrote `results/phase3/REPORT.md`.

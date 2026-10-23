@@ -1,0 +1,36 @@
+{
+ "n_train_success": 21164,
+ "n_gp": 4000,
+ "n_hyper": 1000,
+ "n_test_success": 5290,
+ "seconds_hyper": 125.1640350818634,
+ "seconds_fit": 1.3948547840118408,
+ "kernel": "1.94**2 * RBF(length_scale=[115, 2.09, 1.58, 1.86, 6.85, 20.3, 3.36, 1e+03, 33.6, 63.4, 1e+03, 1e+03, 123, 262, 9.52, 18.7, 1e+03, 1e+03, 1e+03, 24.8, 1e+03, 48.3, 1e+03, 1e+03]) + WhiteKernel(noise_level=0.00461)",
+ "median_baseline": {
+  "rmse_log": 1.5845972153832089,
+  "median_abs_err_laps": 13.0,
+  "median_ratio_err": 3.75
+ },
+ "linear": {
+  "rmse_log": 0.4338156919850438,
+  "median_abs_err_laps": 2.7504458764839783,
+  "median_ratio_err": 1.2420350349548068
+ },
+ "gp": {
+  "rmse_log": 0.13675409535919947,
+  "median_abs_err_laps": 0.6974507289612233,
+  "median_ratio_err": 1.0522487568169745,
+  "coverage_90": 0.888468809073724,
+  "median_interval_laps": [
+   10.567586723404222,
+   15.635917783958352
+  ],
+  "median_interval_width_factor": 1.4386486851089626
+ },
+ "censoring_check": {
+  "n_test_deadlock": 3203,
+  "deadlock_median_P_T_over_Tmax": 0.9999999646635123,
+  "deadlock_fraction_P_over_half": 0.8492038713705901,
+  "success_median_P_T_over_Tmax": 0.0
+ }
+}

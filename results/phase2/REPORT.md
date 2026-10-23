@@ -5,7 +5,7 @@ Full numbers: `results/phase2/metrics.json`. Figure: `results/phase2/confusion.p
 
 ## Setup (plain words)
 
-- **Input**: 26 features of the START of a run only (no information from the simulation itself). They do not depend
+- **Input**: 24 features of the START of a run only (no information from the simulation itself). They do not depend
   on the order of the evaders and work for any N (list in `metrics.json`, "features"). Lengths are divided by kappa.
 - **Test set**: 20 % of the runs, chosen at random but with the same mix of labels and N as the whole set
   ("stratified"). It is never used for choosing settings. arXiv law: 48,000 train / 12,000 test. Circle law: 8,000 / 2,000.

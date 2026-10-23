@@ -39,8 +39,16 @@ wording; the assistant only checks.
   guessing the largest class (that would give 33 %).
 - Why is the theory rule so weak (46 %)? The theorem is local (near the equilibrium); it does not say what happens
   from far starts. That gap is the point of the project.
-- Gaussian process classifier (calibrated probabilities, uncertainty near the boundary)
-- GP / kernel regression for herding time
+- Gaussian process classifier: puts a smooth random function behind the class probabilities; the kernel says that
+  similar starts give similar outcomes, and one length scale per feature says how fast things change along it.
+  Result: best probabilities (log-loss 0.155, Brier 0.090) with only 4,000 training runs; when it is unsure it is
+  usually wrong, so answering only the most confident 80 % gives 98.9 % accuracy.
+- Why only 4,000 runs for the GP? Exact GP needs an n x n matrix inverse: cost grows as n^3. Settings tuned on 1,000.
+- Calibration: "80 % sure" should be right 80 % of the time. Reliability diagram = predicted vs observed frequency.
+- Bayes-risk rule: choose the decision with the smallest expected cost, sum of P(class) x cost. With costs where losing
+  an evader is worst, it cut "loss called success" from 174 to 12 test runs.
+- GP regression for herding time: predicts log(1 + time) with a 90 % band; typical error 0.7 laps; the band holds the
+  truth 89 % of the time.
 - GMM + PCA (do regimes appear without labels?)
 - Bayes-risk decision rule (loss costs more than deadlock)
 
@@ -51,6 +59,12 @@ wording; the assistant only checks.
 - Train on N <= 4, test on N = 5, 6
 - ML vs theory: how conservative are the proven conditions?
 
-## Each plot: what it shows (to fill)
+## Each plot: what it shows
+- `results/phase2/confusion.png`: rows = true class, columns = predicted; the diagonal is right.
+- `results/phase3/reliability.png`: dots on the diagonal = honest probabilities.
+- `results/phase3/selective.png`: accuracy goes up when the model may skip the runs it is least sure about.
+- `results/phase3/map.png`: one 3-evader flock; left = simulation, middle = GP, right = GP P(loss). Dashed line = arXiv
+  condition a = 1. Losses also happen right of the line: the theorem is local.
+- `results/phase3/time.png`: predicted vs true herding time with 90 % bands; and the censoring check.
 
 ## Likely TA questions (to fill)

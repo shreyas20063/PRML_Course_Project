@@ -17,7 +17,7 @@ from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, c
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from features import arxiv_table, circle_table
+from features import arxiv_table, circle_table, test_split
 
 OUT = os.path.join(HERE, "..", "results", "phase2")
 CLASSES = ["success", "deadlock", "loss"]
@@ -53,8 +53,8 @@ def fit_svm(X, y, rng):
     return m, g.best_params_
 
 
-def evaluate(X, y, strat, rng, theory=None):
-    tr, te = train_test_split(np.arange(len(y)), test_size=0.2, stratify=strat, random_state=SEED)
+def evaluate(X, y, N, rng, theory=None):
+    tr, te = test_split(y, N, SEED)
     res = {"n_train": int(len(tr)), "n_test": int(len(te)),
            "test_class_counts": {c: int((y[te] == c).sum()) for c in CLASSES}}
     vals, cnt = np.unique(y[tr], return_counts=True)
@@ -100,9 +100,8 @@ if __name__ == "__main__":
     rng = np.random.default_rng(SEED)
     X, names, y, T_h, meta = arxiv_table()
     theory = np.where(meta["a"] > 1, "success", "loss")
-    strat = np.char.add(y.astype(str), meta["N"].astype(str))
     out = {"features": names}
-    out["arxiv"], (lr, sv, te) = evaluate(X, y, strat, rng, theory)
+    out["arxiv"], (lr, sv, te) = evaluate(X, y, meta["N"], rng, theory)
     print("arxiv", {k: (v["balanced_accuracy"] if isinstance(v, dict) and "balanced_accuracy" in v else v)
                     for k, v in out["arxiv"].items()}, flush=True)
     out["arxiv_by_N_svm"] = {int(n): scores(y[te][meta["N"][te] == n], sv.predict(X[te][meta["N"][te] == n]))
@@ -113,7 +112,7 @@ if __name__ == "__main__":
     out["logreg_coefficients"] = {c: dict(zip(names, map(float, coef[i]))) for i, c in enumerate(lr.classes_)}
     Xc, namesc, yc, Tc, metac = circle_table()
     theory_c = np.where(metac["gamma"] < 0.385, "success", "loss")
-    out["circle"], _ = evaluate(Xc, yc, yc, rng, theory_c)
+    out["circle"], _ = evaluate(Xc, yc, None, rng, theory_c)
     print("circle", {k: (v["balanced_accuracy"] if isinstance(v, dict) and "balanced_accuracy" in v else v)
                      for k, v in out["circle"].items()}, flush=True)
     json.dump(out, open(os.path.join(OUT, "metrics.json"), "w"), indent=1, default=float)

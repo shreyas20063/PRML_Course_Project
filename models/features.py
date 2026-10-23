@@ -75,3 +75,10 @@ def circle_table(eps_r=0.01):
     y, T_h, stuck, j = label(d, eps_r)
     X = np.stack([np.log(d["gamma"]), d["r0"], np.cos(d["psi0"]), np.sin(d["psi0"])], 1)
     return X, ["log_gamma", "r0", "cos_psi0", "sin_psi0"], y, T_h, dict(gamma=d["gamma"])
+
+
+def test_split(y, N=None, seed=0):
+    """The fixed 20 % test set used by every phase (stratified by label, and by N if given)."""
+    from sklearn.model_selection import train_test_split
+    strat = y.astype(str) if N is None else np.char.add(y.astype(str), np.asarray(N).astype(str))
+    return train_test_split(np.arange(len(y)), test_size=0.2, stratify=strat, random_state=seed)
