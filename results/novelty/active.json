@@ -797,7 +797,155 @@
      "frac_loss_picked": 0.11475
     }
    ],
-   "1": [],
+   "1": [
+    {
+     "balanced_accuracy": 0.8929188128018426,
+     "log_loss": 0.33607961114341145,
+     "bayes_cost": 0.309,
+     "n": 200,
+     "frac_loss_picked": 0.27
+    },
+    {
+     "balanced_accuracy": 0.8916678046836232,
+     "log_loss": 0.31509713737790956,
+     "bayes_cost": 0.27125,
+     "n": 300,
+     "frac_loss_picked": 0.18333333333333332
+    },
+    {
+     "balanced_accuracy": 0.8906429207776836,
+     "log_loss": 0.3027515340824722,
+     "bayes_cost": 0.24258333333333335,
+     "n": 400,
+     "frac_loss_picked": 0.1375
+    },
+    {
+     "balanced_accuracy": 0.8983824586070007,
+     "log_loss": 0.2830875653273892,
+     "bayes_cost": 0.21641666666666667,
+     "n": 500,
+     "frac_loss_picked": 0.118
+    },
+    {
+     "balanced_accuracy": 0.8983045259420974,
+     "log_loss": 0.2760169945337124,
+     "bayes_cost": 0.1955,
+     "n": 600,
+     "frac_loss_picked": 0.1
+    },
+    {
+     "balanced_accuracy": 0.898276346355735,
+     "log_loss": 0.2695742949998026,
+     "bayes_cost": 0.18308333333333332,
+     "n": 700,
+     "frac_loss_picked": 0.08714285714285715
+    },
+    {
+     "balanced_accuracy": 0.8991930211997813,
+     "log_loss": 0.2625077296850728,
+     "bayes_cost": 0.1725,
+     "n": 800,
+     "frac_loss_picked": 0.07875
+    },
+    {
+     "balanced_accuracy": 0.8990765588072795,
+     "log_loss": 0.256965903175743,
+     "bayes_cost": 0.16141666666666668,
+     "n": 900,
+     "frac_loss_picked": 0.07111111111111111
+    },
+    {
+     "balanced_accuracy": 0.9003487281079163,
+     "log_loss": 0.2514909782333622,
+     "bayes_cost": 0.15091666666666667,
+     "n": 1000,
+     "frac_loss_picked": 0.067
+    },
+    {
+     "balanced_accuracy": 0.9104921309433959,
+     "log_loss": 0.23655126211100394,
+     "bayes_cost": 0.14041666666666666,
+     "n": 1250,
+     "frac_loss_picked": 0.0752
+    },
+    {
+     "balanced_accuracy": 0.9123909733004085,
+     "log_loss": 0.22463412969419097,
+     "bayes_cost": 0.12833333333333333,
+     "n": 1500,
+     "frac_loss_picked": 0.078
+    },
+    {
+     "balanced_accuracy": 0.9168705663585129,
+     "log_loss": 0.21073242416504173,
+     "bayes_cost": 0.117,
+     "n": 1750,
+     "frac_loss_picked": 0.088
+    },
+    {
+     "balanced_accuracy": 0.9201213801690612,
+     "log_loss": 0.20022398161752164,
+     "bayes_cost": 0.11275,
+     "n": 2000,
+     "frac_loss_picked": 0.094
+    },
+    {
+     "balanced_accuracy": 0.9236491850133305,
+     "log_loss": 0.19541284285247765,
+     "bayes_cost": 0.10833333333333334,
+     "n": 2250,
+     "frac_loss_picked": 0.09422222222222222
+    },
+    {
+     "balanced_accuracy": 0.9269376863010438,
+     "log_loss": 0.1874117473653842,
+     "bayes_cost": 0.10358333333333333,
+     "n": 2500,
+     "frac_loss_picked": 0.0992
+    },
+    {
+     "balanced_accuracy": 0.9263770956038874,
+     "log_loss": 0.19176442784036488,
+     "bayes_cost": 0.10633333333333334,
+     "n": 2750,
+     "frac_loss_picked": 0.10218181818181818
+    },
+    {
+     "balanced_accuracy": 0.9289339095807674,
+     "log_loss": 0.18705461532432427,
+     "bayes_cost": 0.0985,
+     "n": 3000,
+     "frac_loss_picked": 0.10833333333333334
+    },
+    {
+     "balanced_accuracy": 0.9309103543779106,
+     "log_loss": 0.17921249152636065,
+     "bayes_cost": 0.09958333333333333,
+     "n": 3250,
+     "frac_loss_picked": 0.11507692307692308
+    },
+    {
+     "balanced_accuracy": 0.9311566409587887,
+     "log_loss": 0.1790039773751886,
+     "bayes_cost": 0.098,
+     "n": 3500,
+     "frac_loss_picked": 0.11828571428571429
+    },
+    {
+     "balanced_accuracy": 0.9333520937331863,
+     "log_loss": 0.17599427985237875,
+     "bayes_cost": 0.09858333333333333,
+     "n": 3750,
+     "frac_loss_picked": 0.12906666666666666
+    },
+    {
+     "balanced_accuracy": 0.9341445137540682,
+     "log_loss": 0.1701309167440995,
+     "bayes_cost": 0.09866666666666667,
+     "n": 4000,
+     "frac_loss_picked": 0.1385
+    }
+   ],
    "2": []
   }
  }
