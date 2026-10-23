@@ -1,0 +1,13 @@
+# output of: python models/gp_stability.py 100   (2026-10-23)
+CMAX 100.0: tuned in 394 s; amplitudes [np.float64(100.0), np.float64(100.0), np.float64(100.0)]
+set 0: binary acc [0.9617 0.9692 0.9425] | bal 0.9362 logloss 0.1639 cost 0.1241
+set 1: binary acc [0.9615 0.9707 0.943 ] | bal 0.9376 logloss 0.1616 cost 0.1263
+set 2: binary acc [0.9599 0.9698 0.9424] | bal 0.9371 logloss 0.1631 cost 0.1263
+set 3: binary acc [0.9599 0.9685 0.9438] | bal 0.9361 logloss 0.1616 cost 0.1207
+set 4: binary acc [0.9595 0.9689 0.9434] | bal 0.9365 logloss 0.1621 cost 0.1219
+set 5: binary acc [0.9605 0.9703 0.9431] | bal 0.9365 logloss 0.1663 cost 0.1290
+set phase3: binary acc [0.9607 0.9692 0.9427] | bal 0.9367 logloss 0.1618 cost 0.1233
+
+
+# before the cap (signal variance ~2,050), success-vs-rest accuracy on 6 random sets:
+# 0.8629 0.8989 0.9308 0.9629 0.9618 0.9612 (confidently wrong test runs: 853 506 145 0 0 0)

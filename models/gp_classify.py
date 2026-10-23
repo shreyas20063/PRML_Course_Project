@@ -30,6 +30,10 @@ from features import arxiv_table, test_split
 OUT = os.path.join(HERE, "..", "results", "phase3")
 CLASSES = np.array(["success", "deadlock", "loss"])
 HYPER_N, GP_N, SVM_N, SEED = 1000, 4000, 20000, 0
+# Cap on the GP signal variance. Without it the tuned "success" kernel had variance ~2,050 and the GP became
+# over-confident on some training sets (3 of 6 random 4,000-run sets: balanced accuracy 0.89-0.93 instead of 0.94,
+# up to 853 confidently wrong test runs). With the cap, 7 sets give 0.936-0.938 (models/gp_stability.py).
+AMP_MAX = 100.0
 # Bayes-risk cost matrix COST[true, decided], order success / deadlock / loss  [proposal: the student chooses]
 COST = np.array([[0, 1, 1],     # true success: calling it deadlock or loss wastes an attempt
                  [3, 0, 1],     # true deadlock called success: time wasted waiting
@@ -42,7 +46,7 @@ class OvRGP:
         from joblib import Parallel, delayed
         def one(i, c):
             if kernels is None:
-                k = ConstantKernel(1.0, (1e-2, 1e5)) * RBF(np.ones(X.shape[1]), (1e-2, 1e4))
+                k = ConstantKernel(1.0, (1e-2, AMP_MAX)) * RBF(np.ones(X.shape[1]), (1e-2, 1e4))
                 m = GaussianProcessClassifier(k, random_state=SEED)
             else:
                 m = GaussianProcessClassifier(kernels[i], optimizer=None, random_state=SEED)
