@@ -8,6 +8,9 @@ q = k1 R (pursuer circle size) and beta = k k1^3 / w (push strength / speed) on 
              (the theorem says nothing about beta);
   gp       : the GP classifier's best grid point: max P(success), ties (within 0.02) broken by the shortest
              predicted herding time (censored cure model, time if the run settles).
+  gp_safe  : risk-aware: as gp, but only among grid points with predicted P(loss) <= 0.01 (if none, the
+             smallest P(loss)).
+Paired comparison of success (and of loss) between strategies on the same flocks: exact McNemar test.
 Every chosen setting is SIMULATED (300 laps) and labelled with the dataset rules.
 
 usage: python models/control_choice.py  ->  results/control/metrics.json, results/control/control.png
@@ -69,7 +72,7 @@ if __name__ == "__main__":
 
     rng = np.random.default_rng(7)
     flocks = rng.choice(te[meta["N"][te] >= 2], N_FLOCKS, replace=False)       # multi-evader flocks
-    choice = {k: np.zeros((N_FLOCKS, 2)) for k in ("original", "fixed", "theory", "gp")}
+    choice = {k: np.zeros((N_FLOCKS, 2)) for k in ("original", "fixed", "theory", "gp", "gp_safe")}
     pred_best = np.zeros(N_FLOCKS)
     t0 = time.time()
     for f, b in enumerate(flocks):
@@ -83,10 +86,17 @@ if __name__ == "__main__":
             r, p = equilibria(q, be, 1.0, 1.0, kap)
             F.append(list(run_features(X0, q, be, kap, r[0], p[0]).values()))
         Zc = sc.transform(np.array(F))
-        P = gp.predict_proba(Zc)[:, 0]; tm = tob.f(Zc)
+        PP = gp.predict_proba(Zc); P = PP[:, 0]; tm = tob.f(Zc)
         ok = P >= P.max() - 0.02
         i = np.flatnonzero(ok)[np.argmin(tm[ok])]
         choice["gp"][f] = cand[i]; pred_best[f] = P[i]
+        safe = PP[:, 2] <= 0.01
+        if not safe.any():
+            safe = PP[:, 2] <= PP[:, 2].min() + 1e-12
+        Ps = np.where(safe, P, -1)
+        ok = Ps >= Ps.max() - 0.02
+        i = np.flatnonzero(ok)[np.argmin(tm[ok])]
+        choice["gp_safe"][f] = cand[i]
         if f % 50 == 0:
             print(f"flock {f}: {time.time() - t0:.0f} s", flush=True)
 
@@ -97,6 +107,16 @@ if __name__ == "__main__":
         cls, Th = simulate(X0, n, ch[:, 0], ch[:, 1], kap)
         res[k] = (cls, Th); out[k] = summary(cls, Th)
         print(k, out[k], flush=True)
+    from scipy.stats import binomtest
+    def mcnemar(a, b):
+        n01, n10 = int(np.sum(~a & b)), int(np.sum(a & ~b))
+        return dict(only_first=n10, only_second=n01,
+                    p_value=float(binomtest(n10, n10 + n01, 0.5).pvalue) if n10 + n01 else 1.0)
+    out["mcnemar"] = {}
+    for a, b in (("gp", "theory"), ("gp_safe", "theory"), ("gp_safe", "gp"), ("gp", "fixed")):
+        out["mcnemar"][f"{a}_vs_{b}"] = dict(success=mcnemar(res[a][0] == "success", res[b][0] == "success"),
+                                             loss=mcnemar(res[a][0] == "loss", res[b][0] == "loss"))
+    print(out["mcnemar"], flush=True)
     json.dump(out, open(os.path.join(OUT, "metrics.json"), "w"), indent=1)
     np.savez_compressed(os.path.join(OUT, "choices.npz"), flocks=flocks, **{f"choice_{k}": v for k, v in choice.items()},
                         **{f"cls_{k}": v[0] for k, v in res.items()}, **{f"T_{k}": v[1] for k, v in res.items()})
@@ -105,8 +125,9 @@ if __name__ == "__main__":
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(1, 2, figsize=(10.5, 4))
-    keys = ["original", "fixed", "theory", "gp"]; labs = ["random\n(dataset)", "fixed\ndefault", "theory\n(a = 4)", "GP-chosen"]
-    bottom = np.zeros(4)
+    keys = ["original", "fixed", "theory", "gp", "gp_safe"]
+    labs = ["random\n(dataset)", "fixed\ndefault", "theory\n(a = 4)", "GP\nmax P(success)", "GP-safe\nP(loss) <= 1 %"]
+    bottom = np.zeros(len(keys))
     for c, col in zip(CLASSES, ["#4c9f70", "#e3b23c", "#c44536"]):
         v = np.array([out[k][c] for k in keys]); axes[0].bar(labs, v, bottom=bottom, color=col, label=c); bottom += v
     axes[0].set_ylabel("fraction of the 300 flocks (simulated)"); axes[0].legend(fontsize=8, loc="lower right")
