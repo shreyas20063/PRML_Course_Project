@@ -45,7 +45,7 @@
   \begin{itemize}
   \item 52\,\% of successful runs violate $a>1$; 11\,\% of lost runs satisfy it.
   \end{itemize}
-\item For the circle law, the paper's Lyapunov ellipse certifies only \TBD\ of the true success region.
+\item For the circle law, the paper's Lyapunov ellipse certifies only \textbf{0.5--3.7\,\%} of the starts that really converge.
 \end{itemize}
 \end{frame}
 
@@ -99,13 +99,24 @@ SVM + Platt (20k) & 0.938 & 0.200\\
 \begin{itemize}
 \item Deadlock runs only tell us "time $>$ 300 laps". Dropping them biases the model.
 \item Kernel \textbf{mixture-cure} survival model: $P(\text{ever settles})$ + time if it settles.
-\item Check: 300 deadlock runs re-simulated \textbf{10$\times$ longer}: \TBD.
+\item Check: 300 deadlock runs re-simulated \textbf{10$\times$ longer}: 158 settle, 137 never. From the start alone the cure model predicts which: \textbf{AUC 0.98}; mean prediction 53.5\,\% vs observed 53.6\,\%.
 \end{itemize}
 \centering\includegraphics[width=0.75\textwidth]{censored/censored.png}
 \end{frame}
 
 \begin{frame}{Novelty 3: using the model to choose the pursuer settings}
-\TBD
+\begin{columns}
+\column{0.45\textwidth}
+\begin{itemize}
+\item 300 flocks; each strategy picks $q$ and $\beta$; \textbf{every choice simulated}.
+\item Theory rule ($a=4$): 83\,\% success, \textbf{0\,\% loss}.
+\item GP max $P(\text{success})$: 87\,\% but 3\,\% loss.
+\item \textbf{GP-safe} ($P(\text{loss})\le1\,\%$): 0\,\% loss and \textbf{2.3$\times$ faster} (6 vs 14 laps, Wilcoxon $p\approx10^{-23}$).
+\item Lesson again: put the cost of the worst mistake into the decision.
+\end{itemize}
+\column{0.55\textwidth}
+\includegraphics[width=\textwidth]{control/control.png}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Do the regimes appear without labels? (GMM + PCA)}
@@ -121,7 +132,12 @@ SVM + Platt (20k) & 0.938 & 0.200\\
 \end{frame}
 
 \begin{frame}{Theory vs data: the circle law}
-\TBD
+\centering\includegraphics[width=\textwidth]{theory/circle.png}
+\begin{itemize}
+\item Blue: the paper's Lyapunov ellipse (always correct). Green: starts that really converge.
+\item The proof covers 0.5--3.7\,\% of the true region: near the ring the motion is an almost undamped rotation.
+\item The classifiers learn the true region: 99\,\% balanced accuracy for this law.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Honest limits}

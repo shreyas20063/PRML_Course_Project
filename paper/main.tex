@@ -193,6 +193,30 @@ Fig.~\ref{fig:active}: risk-aware sampling reaches the decision cost of random s
 runs and ends best in accuracy (0.946), yet its decision cost is \emph{worse} than random (0.137): what to simulate
 should follow the decision the model is for.
 
+\subsection{Using the model to choose the pursuer settings}
+For 300 held-out multi-evader flocks we let each strategy choose $(q,\beta)$ on a $15\times15$ grid and simulate the
+choice (Table~\ref{tab:ctrl}). A theory-guided rule (choose $q$ so that $a=4$, $\beta=1$) never loses an evader.
+Maximising the GP's $P(\text{success})$ gives more successes (exact McNemar $p=0.002$) but loses evaders in 3\,\% of
+flocks ($p=0.004$). The risk-aware choice---maximise $P(\text{success})$ subject to $P(\text{loss})\le1\,\%$, then the
+shortest predicted time from the cure model---matches the theory's zero losses (success 81.7 vs 83.3\,\%, $p=0.06$) and
+herds faster: on the 245 flocks where both succeed, median 6 vs 14 laps, faster in 88\,\% (Wilcoxon $p=9\times10^{-24}$).
+\begin{table}[t]
+\centering
+\caption{Simulated outcome of the settings chosen by each strategy (300 flocks).}
+\label{tab:ctrl}
+\begin{tabular}{lcccc}
+\toprule
+strategy & success & deadlock & loss & median $T_h$\\
+\midrule
+random (dataset) & 38.0 & 31.0 & 31.0 & 18.5\\
+fixed default & 61.7 & 9.0 & 29.3 & 37\\
+theory ($a=4$) & 83.3 & 16.7 & \textbf{0.0} & 15\\
+GP, max $P(\text{success})$ & \textbf{86.7} & 10.3 & 3.0 & 6\\
+GP-safe, $P(\text{loss})\le1\%$ & 81.7 & 18.3 & \textbf{0.0} & \textbf{6}\\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Theory comparison}
 For the circle law we re-solve the paper's Lyapunov-ellipse problem~\cite{singh2024cdc,davison1971} (start from the
 Lyapunov-equation solution, optimise the shape, check $\dot V<0$ on dense grids) and compare it with the true region
