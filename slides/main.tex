@@ -5,10 +5,9 @@
 \usepackage{graphicx}
 \graphicspath{{../results/}}
 \setbeamertemplate{navigation symbols}{}
-\newcommand{\TBD}{\textcolor{red}{TBD}}
 
 \title[Herding outcome prediction]{Probabilistic Prediction of Outcome and Herding Time\\in Single-Pursuer Multi-Evader Herding}
-\author{Shreyas}
+\author{[Your name] (EC24BT033)}
 \institute{EE604T Pattern Recognition and Machine Learning, IIT Dharwad}
 \date{17 November 2026}
 
@@ -128,7 +127,25 @@ SVM + Platt (20k) & 0.938 & 0.200\\
 \end{frame}
 
 \begin{frame}{Set kernel: compare flocks as sets of points}
-\TBD
+\begin{itemize}
+\item Instead of hand-made summaries, compare two flocks evader by evader:
+\[K(A,B)=k_g(g_A,g_B)\Big[k_e(e_{0A},e_{0B})+\tfrac{1}{|S_A||S_B|}\textstyle\sum_{u\in S_A,v\in S_B}k_e(u,v)\Big]\]
+\item Works for any number of evaders (kernel mean embedding).
+\end{itemize}
+\vspace{2mm}
+\centering
+\begin{tabular}{lcc}
+\toprule
+SVM, balanced accuracy & random split & \textbf{train $N\le4$, test $N=5,6$}\\
+\midrule
+hand-made features & 93.0\,\% & 90.0\,\%\\
+set kernel & 93.6\,\% & \textbf{93.8\,\%}\\
+\bottomrule
+\end{tabular}
+\vspace{2mm}
+\begin{itemize}
+\item The set kernel does not lose accuracy on bigger flocks than it has seen.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Theory vs data: the circle law}

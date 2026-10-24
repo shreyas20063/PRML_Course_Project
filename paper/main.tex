@@ -6,13 +6,12 @@
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \graphicspath{{../results/}}
-\newcommand{\TBD}{\textcolor{red}{TBD}}
 
 \begin{document}
 
-\title{Probabilistic Prediction of Outcome and Herding Time\\in Single-Pursuer Multi-Evader Herding}
+\title{Probabilistic Prediction of Outcome and Herding Time in Single-Pursuer Multi-Evader Herding}
 
-\author{\IEEEauthorblockN{Shreyas}
+\author{\IEEEauthorblockN{[Your name] (EC24BT033)}
 \IEEEauthorblockA{EE604T Pattern Recognition and Machine Learning, IIT Dharwad}}
 
 \maketitle
@@ -23,12 +22,13 @@ evader. Existing theory for this law is local: it guarantees a stable herd near 
 about which starting configurations end in success, in a stalled herd, or in a lost evader, or how long herding
 takes. We learn this map from 60{,}000 validated simulations with classical, probabilistic machine learning.
 A Gaussian-process (GP) classifier on permutation-invariant features predicts the three-way outcome from the start
-alone with 93.7\,\% balanced accuracy and the best calibrated probabilities of all models, transfers to unseen
-flock sizes, and reveals that evaders are lost even where the stability condition of the theory holds. A kernel
-mixture-cure survival model handles runs that do not settle within the horizon and separates slow from stuck herds,
-which we confirm by re-simulating ten times longer. Finally, we propose a risk-aware active-learning rule that picks
-the next simulation by the Bayes risk of the decision; it reaches the decision cost of random sampling with
-2.3$\times$ fewer simulations, whereas standard entropy sampling improves accuracy but worsens the decision cost.
+alone with 93.7\,\% balanced accuracy and the best calibrated probabilities of all models, and reveals that
+evaders are lost even where the stability condition of the theory holds; a set kernel keeps 93.8\,\% on flock sizes
+never seen in training. A kernel mixture-cure survival model separates slow from stuck herds beyond the simulation
+horizon (AUC 0.98 against ten-times-longer re-simulation). A risk-aware active-learning rule that picks the next
+simulation by the Bayes risk of the decision reaches the decision cost of random sampling with 2.3$\times$ fewer
+simulations, whereas entropy sampling worsens it. Used to choose the pursuer settings, the risk-aware model matches the
+theory-guided rule's zero losses while herding 2.3$\times$ faster in simulation.
 \end{abstract}
 
 \section{Introduction}
@@ -40,8 +40,7 @@ estimate of the region of attraction for the tracked evader. For the other evade
 brute-force simulation~\cite{singh2025arxiv}.
 
 A practitioner needs more: \emph{given this flock and these settings, will herding succeed, stall, or lose an evader,
-how sure are we, and how long will it take?} We treat this as a pattern-recognition problem with three
-contributions:
+how sure are we, and how long will it take?} We treat this as a pattern-recognition problem. Contributions:
 \begin{enumerate}
 \item A validated dataset and calibrated probabilistic predictors (GP classification and regression, Bayes-risk
 decisions) of the outcome and herding time for any flock size, with an analysis of where the local theory fails.
@@ -49,11 +48,26 @@ decisions) of the outcome and herding time for any flock size, with an analysis 
 herds that never settle.
 \item Risk-aware active learning: choosing the next simulation by the Bayes risk of the downstream decision, and the
 finding that the usual uncertainty-based choice optimises the wrong target.
+\item A set kernel (kernel mean embedding) over the evaders that generalises to unseen flock sizes, and a
+risk-aware choice of pursuer settings validated by simulation against a theory-guided rule.
 \end{enumerate}
 GP classification with active learning has estimated regions of attraction of single systems~\cite{wang2023roa}
 and missile capture regions~\cite{lee2022capture}; see also safe ROA learning~\cite{berkenkamp2016}. We add three
 asymmetric-cost outcome classes, many agents with permutation-invariant inputs, censored times, and a decision-driven
 acquisition rule.
+
+\section{Related Work}
+\emph{Herding.} The circular law~\cite{singh2024cdc} yields a stable and an unstable limit cycle and an inner Lyapunov
+estimate of the region of attraction (ROA); the feedback law~\cite{singh2025arxiv} adds a unique, locally stable
+common equilibrium for all evaders when $2k_1^2R^2>1$ and $\kappa<\ln(2k_1^2R^2)/(2k_1)$. Global behaviour, losses and
+herding time are not characterised.
+\emph{Learning ROAs.} GP classification estimates ROAs with confidence and active learning~\cite{wang2023roa}, and
+missile capture regions with uncertainty sampling~\cite{lee2022capture}; GP-based safe exploration learns ROAs of
+uncertain systems~\cite{berkenkamp2016}. Classical Lyapunov estimates~\cite{khalil2002,davison1971} are sound but can be
+conservative; we quantify how much.
+\emph{Survival models.} Tobit regression~\cite{tobin1958} handles censoring; mixture-cure models~\cite{farewell1982} add a
+sub-population that never experiences the event. We use kernel versions via random features~\cite{rahimi2007rff}.
+\emph{Active learning}~\cite{settles2009} usually targets uncertainty; we target the Bayes risk of the decision.
 
 \section{System and Data}
 \subsection{Model}
@@ -112,6 +126,13 @@ Starting from 200 random runs, the GP repeatedly adds batches from a pool. \emph
 predictive entropy~\cite{settles2009}. \emph{Risk-aware} sampling picks the largest Bayes risk of the best decision,
 $r(x)=\min_j\sum_i P(i\mid x)L_{ij}$, i.e.\ where acting is most expensive.
 
+\subsection{Evaluation protocol}
+All models share one fixed, stratified (label $\times N$) 20\,\% test set (12{,}000 runs) that is never used for tuning;
+settings are chosen by cross-validation on training data only. We report balanced accuracy (mean per-class recall),
+log-loss, Brier score and expected calibration error (ECE, 15 bins); for times, median error and interval coverage;
+for censored times, the time-dependent concordance $C_{td}$~\cite{antolini2005}. Paired comparisons on the same flocks
+use exact McNemar and Wilcoxon signed-rank tests. Every learned conclusion that matters is checked by new simulations.
+
 \section{Results}
 \subsection{Outcome prediction}
 \begin{table}[t]
@@ -136,13 +157,13 @@ probabilities. Trained on $N\le4$ and tested on $N=5,6$, the SVM keeps 92.8\,\%.
 answering only the 80\,\% most confident runs raises GP accuracy to 98.6\,\%. The Bayes rule cuts ``loss called
 success'' from 169 to 9 test runs. Fig.~\ref{fig:map} compares the learned map with 1{,}600 fresh simulations
 (97.3\,\% agreement): losses occur right of $a=1$, where the theorems hold, because those theorems are local.
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{phase3/map.png}
+\includegraphics[width=0.92\textwidth]{phase3/map.png}
 \caption{One 3-evader flock: simulated outcome (left), GP prediction (middle) and GP $P(\text{loss})$ with its
 high-uncertainty contour (right) over $q$ and $\beta$; dashed: $a=1$.}
 \label{fig:map}
-\end{figure}
+\end{figure*}
 
 \subsection{Herding time}
 On settled test runs a GP regression predicts $T_h$ with median error 0.7 laps and 89\,\% coverage of its 90\,\%
@@ -176,18 +197,33 @@ Right: predicted vs true herding time of those that settle.}
 \label{fig:cens}
 \end{figure}
 
+\subsection{Unseen flock sizes: a set kernel}
+Hand-made summaries lose information about individual evaders. We also compare runs directly as sets with
+$K(A,B)=k_g(g_A,g_B)\,[k_e(e_{0A},e_{0B})+\tfrac{1}{|S_A||S_B|}\sum_{u\in S_A,v\in S_B}k_e(u,v)]$, where $g$ are six global
+parameters, $e_0$ the tracked evader and $S$ the set of other evaders (positions$/\kappa$); the bracket is an inner
+product of kernel mean embeddings~\cite{muandet2017}, valid for any set sizes. With an SVM and 8{,}000 training runs:
+random split 93.6\,\% (hand features 93.0\,\%); trained on $N\le4$, tested on $N=5,6$: \textbf{93.8\,\%} (hand features
+90.0\,\%). The set kernel does not degrade on larger flocks.
+
 \subsection{Unsupervised regimes}
 PCA and a GMM (BIC) on start features do not recover the classes (ARI 0.08), but on trajectory shapes the clusters are
-95\,\% pure and the first two components form one arm per class: the labels are natural regimes, and predicting them
-from the start requires supervision.
+95\,\% pure and the first two components form one arm per class (Fig.~\ref{fig:reg}): the labels are natural
+regimes, and predicting them from the start requires supervision.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{regimes/regimes.png}
+\caption{PCA of start features (left) and of trajectory shapes (middle), coloured by outcome; class mix of the GMM
+clusters of trajectory shapes (right).}
+\label{fig:reg}
+\end{figure*}
 
 \subsection{Risk-aware active learning}
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{novelty/active.png}
+\includegraphics[width=0.92\textwidth]{novelty/active.png}
 \caption{Quality vs number of simulations for three acquisition rules (3 repeats; bands = min to max).}
 \label{fig:active}
-\end{figure}
+\end{figure*}
 Fig.~\ref{fig:active}: risk-aware sampling reaches the decision cost of random sampling at 4{,}000 runs with 1{,}750
 (2.3$\times$ fewer) and ends 22\,\% lower (0.099 vs 0.127). Entropy sampling reaches random's accuracy with 1{,}500
 runs and ends best in accuracy (0.946), yet its decision cost is \emph{worse} than random (0.137): what to simulate
@@ -217,6 +253,13 @@ GP-safe, $P(\text{loss})\le1\%$ & 81.7 & 18.3 & \textbf{0.0} & \textbf{6}\\
 \end{tabular}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{control/control.png}
+\caption{Outcome (left) and herding time (right) of the settings chosen by each strategy, every choice simulated.}
+\label{fig:ctrl}
+\end{figure}
+
 \subsection{Theory comparison}
 For the circle law we re-solve the paper's Lyapunov-ellipse problem~\cite{singh2024cdc,davison1971} (start from the
 Lyapunov-equation solution, optimise the shape, check $\dot V<0$ on dense grids) and compare it with the true region
@@ -226,16 +269,28 @@ is a nearly undamped rotation at the ring (Jacobian eigenvalues $\approx-0.005\p
 Lyapunov function stops decreasing very close to it. Our certified ellipse is smaller than the one drawn
 in~\cite{singh2024cdc}; along its limiting direction $\dot V$ indeed turns positive at $0.08R$.
 For the arXiv law, Fig.~\ref{fig:map} and the theory-rule baseline show the analogous gap.
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{theory/circle.png}
+\includegraphics[width=0.92\textwidth]{theory/circle.png}
 \caption{Circle law, rotating frame: simulated outcome of every start (green: converges, red: lost) and the
 Lyapunov-ellipse certificate (blue).}
 \label{fig:theory}
-\end{figure}
+\end{figure*}
 
 \section{Conclusion}
-\TBD
+The outcome and duration of single-pursuer herding are predictable from the start with calibrated uncertainty, far
+beyond what the local theory certifies: the proven region covers a few percent of the true one, and evaders are lost
+where the stability condition holds. Two lessons carry beyond herding. First, censored outcomes hide structure: a
+cure model turns ``not finished'' into ``slow'' versus ``stuck'' and predicts it beyond the horizon. Second, both data
+collection and decisions should be driven by the cost of the worst mistake: risk-aware active learning needs 2.3$\times$
+fewer simulations for the same decision quality, and risk-aware setting selection keeps zero losses while herding
+faster. Limits: all results are in simulation; labels depend on $T_{\max}$ and tolerances; exact GPs were limited to
+4{,}000 training runs; the cost matrix is a design choice. Future work: switching pursuer laws and noisy sensing.
+
+\section*{Acknowledgment and AI use}
+An AI assistant (Claude Code) was used, as allowed in the course, for code, experiments and drafting under the
+author's direction; all numbers come from the scripts in the project repository and every choice was checked by the
+author.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
