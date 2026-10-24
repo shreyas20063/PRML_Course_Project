@@ -55,8 +55,46 @@ def summary(cls, T_h):
                 mean_time_capped=float(np.mean(np.where(cls == "success", T_h, LAPS))))
 
 
+def plot(out, res):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4.2))
+    keys = ["original", "fixed", "theory", "gp", "gp_safe"]
+    labs = ["random\n(dataset)", "fixed\ndefault", "theory\n(a = 4)", "GP\nmax P(succ.)", "GP-safe\nP(loss)<=1%"]
+    bottom = np.zeros(len(keys))
+    for c, col in zip(CLASSES, ["#4c9f70", "#e3b23c", "#c44536"]):
+        v = np.array([out[k][c] for k in keys]); axes[0].bar(labs, v, bottom=bottom, color=col, label=c); bottom += v
+    axes[0].set_ylabel("fraction of the 300 flocks (simulated)"); axes[0].legend(fontsize=8, loc="lower right")
+    axes[0].tick_params(axis="x", labelsize=8)
+    axes[0].set_title("Outcome when the setting is chosen by each strategy", fontsize=10)
+    for k, lab in zip(keys, labs):
+        Th = res[k][1]; Th = Th[np.isfinite(Th)]
+        axes[1].hist(Th + 1, bins=np.geomspace(1, 301, 25), histtype="step", lw=1.5, label=lab.replace("\n", " "))
+    axes[1].set_xscale("log"); axes[1].set_xlabel("herding time + 1 (laps), successful runs"); axes[1].legend(fontsize=8)
+    axes[1].set_title("How fast (successful runs only)", fontsize=10)
+    fig.tight_layout(); fig.savefig(os.path.join(OUT, "control.png"), dpi=130)
+
+
+def paired_time_test(res, a, b):
+    """Wilcoxon signed-rank test of herding times on the flocks where both strategies succeed."""
+    from scipy.stats import wilcoxon
+    both = (res[a][0] == "success") & (res[b][0] == "success")
+    ta, tb = res[a][1][both], res[b][1][both]
+    return dict(n_both=int(both.sum()), median_a=float(np.median(ta)), median_b=float(np.median(tb)),
+                frac_a_faster=float(np.mean(ta < tb)), p_value=float(wilcoxon(ta, tb).pvalue))
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
+    if sys.argv[1:] == ["--plot"]:          # redraw + paired time tests from the saved results
+        out = json.load(open(os.path.join(OUT, "metrics.json")))
+        z = np.load(os.path.join(OUT, "choices.npz"), allow_pickle=True)
+        res = {k: (z[f"cls_{k}"], z[f"T_{k}"]) for k in ("original", "fixed", "theory", "gp", "gp_safe")}
+        out["paired_time"] = {f"{a}_vs_{b}": paired_time_test(res, a, b) for a, b in (("gp_safe", "theory"), ("gp", "theory"))}
+        print(out["paired_time"])
+        json.dump(out, open(os.path.join(OUT, "metrics.json"), "w"), indent=1)
+        plot(out, res); sys.exit()
     X, names, y, T_h, meta = arxiv_table()
     d = load("arxiv")
     tr, te = test_split(y, meta["N"], SEED)
@@ -120,21 +158,6 @@ if __name__ == "__main__":
     json.dump(out, open(os.path.join(OUT, "metrics.json"), "w"), indent=1)
     np.savez_compressed(os.path.join(OUT, "choices.npz"), flocks=flocks, **{f"choice_{k}": v for k, v in choice.items()},
                         **{f"cls_{k}": v[0] for k, v in res.items()}, **{f"T_{k}": v[1] for k, v in res.items()})
-
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4))
-    keys = ["original", "fixed", "theory", "gp", "gp_safe"]
-    labs = ["random\n(dataset)", "fixed\ndefault", "theory\n(a = 4)", "GP\nmax P(success)", "GP-safe\nP(loss) <= 1 %"]
-    bottom = np.zeros(len(keys))
-    for c, col in zip(CLASSES, ["#4c9f70", "#e3b23c", "#c44536"]):
-        v = np.array([out[k][c] for k in keys]); axes[0].bar(labs, v, bottom=bottom, color=col, label=c); bottom += v
-    axes[0].set_ylabel("fraction of the 300 flocks (simulated)"); axes[0].legend(fontsize=8, loc="lower right")
-    axes[0].set_title("Outcome when the setting is chosen by each strategy", fontsize=10)
-    for k, lab in zip(keys, labs):
-        Th = res[k][1]; Th = Th[np.isfinite(Th)]
-        axes[1].hist(Th + 1, bins=np.geomspace(1, 301, 25), histtype="step", lw=1.5, label=lab.replace("\n", " "))
-    axes[1].set_xscale("log"); axes[1].set_xlabel("herding time + 1 (laps), successful runs"); axes[1].legend(fontsize=8)
-    axes[1].set_title("How fast (successful runs only)", fontsize=10)
-    fig.tight_layout(); fig.savefig(os.path.join(OUT, "control.png"), dpi=130)
+    out["paired_time"] = {f"{a}_vs_{b}": paired_time_test(res, a, b) for a, b in (("gp_safe", "theory"), ("gp", "theory"))}
+    json.dump(out, open(os.path.join(OUT, "metrics.json"), "w"), indent=1)
+    plot(out, res)
