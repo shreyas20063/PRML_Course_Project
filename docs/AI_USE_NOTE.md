@@ -54,3 +54,14 @@ What the student decided: "we need novelty, do something".
 What the AI did: proposed and ran risk-aware active learning (`models/active.py`), checked related work with a web
 search, found and fixed a GP over-confidence problem (signal-variance cap, `models/gp_stability.py`), re-ran Phase 3
 with the fix and corrected its report. Wrote `results/novelty/README.md`.
+
+## Full push (2026-10-24)
+
+What the student decided: "get the top grade; do whatever you want within classical ML; use AI fully; don't ask".
+What the AI did (all code, runs and drafts): censored herding time (kernel Tobit and kernel mixture-cure, validated by
+10x longer re-simulation), set kernel for unseen flock sizes, controller-setting choice checked by simulation with
+McNemar/Wilcoxon tests, theory comparison (re-solved the paper's Lyapunov-ellipse problem), GMM + PCA regimes,
+the Streamlit demo (headless-tested), the IEEE paper and Beamer slides, viva notes. Problems found and fixed on the way:
+GP over-confidence (variance cap), slow app map (batched), grid-edge settings (wider grids, reported).
+What the student still has to do: put their name in the paper and slides, read and re-derive every result, choose the
+final cost matrix and label numbers (or keep the defaults), check the overlap question with the guide.

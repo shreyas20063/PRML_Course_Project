@@ -51,11 +51,11 @@ predicted time +- uncertainty -> press play to animate the real simulation.
 
 Planned extensions (same title; the student decides which to keep):
 - Planned now: (1) [done 2026-10-23, results/novelty/] active learning with the GP classifier: the GP chooses the next simulation where it is least sure;
-  compare the number of runs needed with random sampling. (2) Censored herding time: runs not settled by T_max give only
+  compare the number of runs needed with random sampling. (2) [done, results/censored/] Censored herding time: runs not settled by T_max give only
   "time > T_max"; use a censored (survival-style) regression instead of dropping them.
-- If time allows: (3) set kernels that compare two flocks as sets of points, for any N (stronger unseen-N test);
+- If time allows: (3) [done, results/set_kernel/] set kernels that compare two flocks as sets of points, for any N (stronger unseen-N test);
   (4) early warning: predict the outcome from the first few laps, with shrinking uncertainty (for the demo);
-  (5) choosing the controller (k1, R) by Bayes risk; (6) interpretability: GP length scales vs the theory.
+  (5) [done, results/control/] choosing the controller (k1, R) by Bayes risk; (6) interpretability: GP length scales vs the theory.
 - Bigger change, only if there is time left: (7) noise or unknown parameters (e.g. a different k for each evader).
 
 Milestones: title into the class sheet Oct 21 (done); data ready Oct 25 (done Oct 21); baselines Nov 1; GP + Bayes risk +

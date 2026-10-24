@@ -54,15 +54,28 @@ wording; the assistant only checks.
 - Active learning (our novelty): the GP chooses which simulation to run next. "Entropy" = where it is least sure;
   "risk-aware" = where the best decision is most costly (Bayes risk). Risk-aware reaches random sampling's decision
   cost with 2.3x fewer runs; entropy reaches its accuracy with 2.7x fewer. Each wins on what it aims for.
-- GMM + PCA (do regimes appear without labels?)
-- Bayes-risk decision rule (loss costs more than deadlock)
+- Censored herding time: a deadlock run only tells "time > 300 laps". Tobit uses that inequality; the mixture-cure
+  model also allows "never settles". On 300 deadlock runs re-simulated to 3,000 laps, the cure model predicted which
+  ones settle with AUC 0.98 and the right average rate (53.5 % vs 53.6 %).
+- Random Fourier features: cos(w.x + b) with random w turn an RBF kernel into ordinary features, so a kernel model can
+  be fitted on 27,000 runs (an exact GP cannot).
+- Set kernel: compares two flocks evader by evader (average similarity over all pairs), so it works for any N.
+  Trained on N <= 4 it keeps 93.8 % on N = 5, 6; the hand-made features drop to 90.0 %.
+- Choosing pursuer settings: the model picks q and beta for a flock; every choice was simulated. Risk-aware choice
+  (P(loss) <= 1 %) has 0 % losses like the theory rule and herds 2.3x faster. McNemar test = paired test on yes/no
+  outcomes of the same flocks; Wilcoxon = paired test on times.
+- GMM + PCA: from the start, the classes do not form clusters (ARI 0.08); from the trajectory, they do (purity 95 %).
+  ARI = agreement of two groupings corrected for chance (0 = chance, 1 = same).
+- Theory comparison: the paper's Lyapunov ellipse is a guaranteed (sufficient) region; it covers only 0.5-3.7 % of the
+  starts that really converge, because near the ring the motion is an almost undamped rotation.
 
-## Evaluation (to fill)
+## Evaluation
 - Stratified cross-validation
 - Calibration: reliability diagram, Brier score
 - Confusion matrix
 - Train on N <= 4, test on N = 5, 6
-- ML vs theory: how conservative are the proven conditions?
+- ML vs theory: how conservative are the proven conditions? (0.5-3.7 % coverage; losses where a > 1)
+- New simulations check every important learned claim (map, 10x re-runs, chosen settings).
 
 ## Each plot: what it shows
 - `results/phase2/confusion.png`: rows = true class, columns = predicted; the diagonal is right.
@@ -71,6 +84,11 @@ wording; the assistant only checks.
 - `results/phase3/map.png`: one 3-evader flock; left = simulation, middle = GP, right = GP P(loss). Dashed line = arXiv
   condition a = 1. Losses also happen right of the line: the theorem is local.
 - `results/phase3/time.png`: predicted vs true herding time with 90 % bands; and the censoring check.
+- `results/censored/censored.png`: left = does "will it ever settle" match the 10x re-runs (diagonal = honest);
+  right = predicted vs true time for the slow ones.
+- `results/control/control.png`: outcome and speed of the settings chosen by each strategy (all simulated).
+- `results/theory/circle.png`: green = starts that converge, blue = the region the theorem guarantees.
+- `results/regimes/regimes.png`: PCA pictures; three arms in the trajectory view.
 - `results/novelty/active.png`: quality vs number of simulations for three ways of choosing runs; green (risk-aware)
   has the lowest decision cost, orange (entropy) the best accuracy.
 
