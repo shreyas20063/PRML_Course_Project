@@ -80,9 +80,9 @@ def experiment(name, tr_idx, te_idx, y, Zh, G, E0, S, M, out):
     res = {"n_train": int(len(tr)), "n_test": int(len(te_idx))}
     # --- set kernel: tune (lg, le, C)
     best = None; t0 = time.time()
-    for lg, le in itertools.product((1.0, 2.0, 4.0), (0.15, 0.3, 0.6)):
+    for lg, le in itertools.product((1.0, 2.0, 4.0, 8.0), (0.3, 0.6, 1.2, 2.4)):
         K = set_gram(tu, tu, G, E0, S, M, lg, le)
-        for C in (10, 100, 1000):
+        for C in (1, 10, 100, 1000):
             s = cv_score(K, y[tu], C)
             if best is None or s > best[0]:
                 best = (s, lg, le, C)
@@ -95,7 +95,7 @@ def experiment(name, tr_idx, te_idx, y, Zh, G, E0, S, M, out):
                              params=dict(lg=lg, le=le, C=C, cv=best[0]), seconds=time.time() - t0)
     # --- hand features: RBF-SVM tuned the same way
     best = None; t0 = time.time()
-    for g, C in itertools.product((0.003, 0.01, 0.03, 0.1), (10, 100, 1000)):
+    for g, C in itertools.product((0.001, 0.003, 0.01, 0.03, 0.1), (10, 100, 1000, 10000)):
         K = np.exp(-g * np.maximum((Zh[tu]**2).sum(1)[:, None] + (Zh[tu]**2).sum(1)[None] - 2 * Zh[tu] @ Zh[tu].T, 0))
         s = cv_score(K, y[tu], C)
         if best is None or s > best[0]:
