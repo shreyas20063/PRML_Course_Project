@@ -74,4 +74,28 @@ wording; the assistant only checks.
 - `results/novelty/active.png`: quality vs number of simulations for three ways of choosing runs; green (risk-aware)
   has the lowest decision cost, orange (entropy) the best accuracy.
 
-## Likely TA questions (to fill)
+## Likely TA questions (short answers)
+- "Is this just comparing models?" No. The contributions are (1) a validated dataset and calibrated predictors of a
+  question the theory cannot answer (outcome and time from any start, any N); (2) a censored survival model that
+  separates slow from stuck herds, checked by 10x longer simulation; (3) risk-aware active learning, which chooses
+  simulations by the Bayes risk of the decision, with the finding that entropy sampling optimises the wrong target.
+- "Why not deep learning?" Course rule: classical ML. Also GPs give calibrated uncertainty with 4,000 runs.
+- "Why is the GP limited to 4,000 runs?" Exact GP inverts an n x n matrix: cost n^3. We tune on 1,000, fit on 4,000;
+  random Fourier features (used in the time model) are the classical way to scale kernels.
+- "What does a length scale mean?" How far you must move along a feature before the prediction changes. Short =
+  important. The shortest are log(r*/kappa) and log(q/kappa): ring size and pursuer-circle size relative to the flock.
+- "What is calibration?" If the model says 80 %, it should be right 80 % of the time. Checked by reliability diagrams,
+  Brier score and ECE.
+- "Why balanced accuracy?" Classes have different sizes; it averages per-class recall, so guessing the largest class
+  gives only 33 %.
+- "How do you know the simulator is right?" It reproduces the papers' numbers (ring radii 0.2541 and 0.1255; r* = 0.4458),
+  an independent loss count (32 of 50), and an accurate adaptive solver on 700 runs (same label every time).
+- "What is censoring?" A deadlock run was stopped at 300 laps; we only know its time is above 300. Dropping these runs
+  biases the model; the cure model uses them correctly.
+- "What is a mixture-cure model?" Two parts: the probability that a run ever settles, and how long it takes if it does.
+- "Why risk-aware active learning?" Entropy spends simulations wherever the model is unsure, also on cheap mistakes
+  (deadlock vs success). Risk-aware spends them where a wrong decision is expensive (calling a loss "success").
+- "Does the classifier find the theory's line a = 1?" The map shows the class boundary is NOT at a = 1: losses happen
+  where a > 1, because the theorem is local (near the equilibrium only).
+- "What does the demo show?" Set up a flock -> probabilities, Bayes decision, predicted time -> press Simulate ->
+  the real dynamics; plus a what-if map over the pursuer settings.
