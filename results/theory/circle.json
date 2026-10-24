@@ -1,60 +1,85 @@
 {
  "0.01": {
   "r_star": 0.010001000300120057,
+  "jacobian_eigs": [
+   "(-0.005000750243160573+0.9998874599035533j)",
+   "(-0.005000750243160573-0.9998874599035533j)"
+  ],
+  "ellipse_c": 0.005091252725340138,
   "area_disk_checked": 3.081429112485797,
   "area_true_converging": 3.0001262466860243,
   "area_true_success_300": 3.0001262466860243,
-  "ellipse_area_inside_disk": 0.0,
+  "ellipse_area_inside_disk": 0.01565458906703699,
   "ellipse_false_positive_points": 0,
-  "coverage_ellipse": 0.0,
-  "any_start_disk_radius": 0.0,
-  "coverage_any_start_disk": 0.0,
+  "coverage_ellipse": 0.005217976771587275,
+  "any_start_disk_radius": 0.06127709849274346,
+  "coverage_any_start_disk": 0.0040397239521966,
   "frac_disk_converging": 0.9736152081284825
  },
  "0.03": {
   "r_star": 0.030027073163527422,
+  "jacobian_eigs": [
+   "(-0.015020309454360031+0.9989842404846889j)",
+   "(-0.015020309454360031-0.9989842404846889j)"
+  ],
+  "ellipse_c": 0.00527811099563931,
   "area_disk_checked": 3.081429112485797,
   "area_true_converging": 2.7870218406766822,
   "area_true_success_300": 2.7870218406766822,
-  "ellipse_area_inside_disk": 0.0,
+  "ellipse_area_inside_disk": 0.016664562555232923,
   "ellipse_false_positive_points": 0,
-  "coverage_ellipse": 0.0,
-  "any_start_disk_radius": 0.0,
-  "coverage_any_start_disk": 0.0,
+  "coverage_ellipse": 0.005979344084073202,
+  "any_start_disk_radius": 0.042467639941646554,
+  "coverage_any_start_disk": 0.0021743069396629824,
   "frac_disk_converging": 0.9044575549000328
  },
  "0.1": {
   "r_star": 0.10103125788101082,
+  "jacobian_eigs": [
+   "(-0.050775434046537754+0.9883302573932522j)",
+   "(-0.050775434046537754-0.9883302573932522j)"
+  ],
+  "ellipse_c": 0.005992274453328478,
   "area_disk_checked": 3.081429112485797,
   "area_true_converging": 2.1820477212473173,
   "area_true_success_300": 2.1820477212473173,
-  "ellipse_area_inside_disk": 0.03837899255144552,
+  "ellipse_area_inside_disk": 0.020704456508016663,
   "ellipse_false_positive_points": 0,
-  "coverage_ellipse": 0.017588521175653783,
-  "any_start_disk_radius": 0.009539294366539367,
+  "coverage_ellipse": 0.009488544318444805,
+  "any_start_disk_radius": 0.0,
   "coverage_any_start_disk": 0.0,
   "frac_disk_converging": 0.7081284824647657
  },
  "0.2": {
   "r_star": 0.20914884844131656,
+  "jacobian_eigs": [
+   "(-0.1069395181973325+0.9471406733106444j)",
+   "(-0.1069395181973325-0.9471406733106444j)"
+  ],
+  "ellipse_c": 0.007252779397520618,
   "area_disk_checked": 3.081429112485797,
   "area_true_converging": 1.4467870218406766,
   "area_true_success_300": 1.4467870218406766,
-  "ellipse_area_inside_disk": 0.09493750789041787,
+  "ellipse_area_inside_disk": 0.0232293902285065,
   "ellipse_false_positive_points": 0,
-  "coverage_ellipse": 0.0656195462478185,
+  "coverage_ellipse": 0.01605584642233857,
   "any_start_disk_radius": 0.0,
   "coverage_any_start_disk": 0.0,
   "frac_disk_converging": 0.4695181907571288
  },
  "0.3": {
   "r_star": 0.3389362415949989,
+  "jacobian_eigs": [
+   "(-0.18013014183027035+0.8414143973229413j)",
+   "(-0.18013014183027035-0.8414143973229413j)"
+  ],
+  "ellipse_c": 0.009218023114718229,
   "area_disk_checked": 3.081429112485797,
   "area_true_converging": 0.7680848377730084,
   "area_true_success_300": 0.7680848377730084,
-  "ellipse_area_inside_disk": 0.11968185835121828,
+  "ellipse_area_inside_disk": 0.028279257669486173,
   "ellipse_false_positive_points": 0,
-  "coverage_ellipse": 0.15581854043392504,
+  "coverage_ellipse": 0.036817882971729124,
   "any_start_disk_radius": 0.0,
   "coverage_any_start_disk": 0.0,
   "frac_disk_converging": 0.24926253687315633

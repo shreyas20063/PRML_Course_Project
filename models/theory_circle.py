@@ -139,7 +139,7 @@ if __name__ == "__main__":
         ax.plot(1, 0, "k^", ms=7); ax.plot(*ws, "w*", ms=8, mec="k")
         ax.set_aspect("equal"); ax.set_xlim(-1.05, 1.05); ax.set_ylim(-1.05, 1.05)
         o = out[str(g)]
-        ax.set_title(f"gamma = {g}: ellipse covers {o['coverage_ellipse']:.0%}", fontsize=9)
+        ax.set_title(f"gamma = {g}: ellipse covers {o['coverage_ellipse']:.1%}", fontsize=9)
         ax.set_xticks([]); ax.set_yticks([])
     axes[0].legend(fontsize=6, loc="lower left", markerscale=3)
     fig.suptitle("Circle law, rotating frame (pursuer = triangle): true outcome of every start vs the Lyapunov estimate", fontsize=10)
