@@ -15,3 +15,4 @@ slides/*.nav
 slides/*.snm
 slides/*.toc
 slides/*.vrb
+app/models.joblib
