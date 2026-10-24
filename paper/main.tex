@@ -146,7 +146,35 @@ high-uncertainty contour (right) over $q$ and $\beta$; dashed: $a=1$.}
 
 \subsection{Herding time}
 On settled test runs a GP regression predicts $T_h$ with median error 0.7 laps and 89\,\% coverage of its 90\,\%
-bands. Censoring: \TBD.
+bands, but it ignores the 27\,\% of runs that stop unsettled at $T_{\max}$. Table~\ref{tab:cens} compares three
+censoring-aware variants sharing the same RFF kernel (1{,}000 features). The mixture-cure model is best on every test
+measure. The decisive check goes beyond the training horizon: 300 test deadlock runs re-simulated $10\times$ longer
+(3{,}000 laps) split into 158 that settle, 137 that never do and 5 losses. From the start alone the cure model
+predicts which ones settle with AUC 0.984 and Brier 0.049 (Tobit 0.216, successes-only 0.345); its mean predicted
+probability, 0.535, matches the observed 0.536, and it predicts their herding times within a median factor of 1.09
+(Fig.~\ref{fig:cens}). ``Deadlock'' thus hides two regimes, slow and stuck, which the model separates.
+\begin{table}[t]
+\centering
+\caption{Censored herding time on the test set (settled and deadlock runs).}
+\label{tab:cens}
+\begin{tabular}{lccc}
+\toprule
+ & successes only & Tobit & cure\\
+\midrule
+log-likelihood / run & $-24.05$ & $-0.27$ & $\mathbf{+0.37}$\\
+time concordance $C_{td}$~\cite{antolini2005} & 0.943 & 0.979 & \textbf{0.992}\\
+settled: median error (laps) & 0.72 & 1.95 & \textbf{0.69}\\
+deadlock: mean $P(T_h>T_{\max})$ & 0.83 & 0.95 & \textbf{0.98}\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{censored/censored.png}
+\caption{Deadlock runs re-simulated $10\times$ longer. Left: reliability of $P(\text{settles within 3{,}000 laps})$.
+Right: predicted vs true herding time of those that settle.}
+\label{fig:cens}
+\end{figure}
 
 \subsection{Unsupervised regimes}
 PCA and a GMM (BIC) on start features do not recover the classes (ARI 0.08), but on trajectory shapes the clusters are
@@ -166,7 +194,21 @@ runs and ends best in accuracy (0.946), yet its decision cost is \emph{worse} th
 should follow the decision the model is for.
 
 \subsection{Theory comparison}
-\TBD
+For the circle law we re-solve the paper's Lyapunov-ellipse problem~\cite{singh2024cdc,davison1971} (start from the
+Lyapunov-equation solution, optimise the shape, check $\dot V<0$ on dense grids) and compare it with the true region
+from a $90\times90$ grid of simulated starts. The certificate is always correct (no false positives) but covers only
+0.5\,\% ($\gamma=0.01$) to 3.7\,\% ($\gamma=0.3$) of the truly converging starts (Fig.~\ref{fig:theory}). The reason
+is a nearly undamped rotation at the ring (Jacobian eigenvalues $\approx-0.005\pm1i$ at $\gamma=0.01$): a quadratic
+Lyapunov function stops decreasing very close to it. Our certified ellipse is smaller than the one drawn
+in~\cite{singh2024cdc}; along its limiting direction $\dot V$ indeed turns positive at $0.08R$.
+For the arXiv law, Fig.~\ref{fig:map} and the theory-rule baseline show the analogous gap.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{theory/circle.png}
+\caption{Circle law, rotating frame: simulated outcome of every start (green: converges, red: lost) and the
+Lyapunov-ellipse certificate (blue).}
+\label{fig:theory}
+\end{figure}
 
 \section{Conclusion}
 \TBD
