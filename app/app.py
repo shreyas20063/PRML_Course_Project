@@ -70,26 +70,47 @@ par = (R, k, w, k1, kap if not circle else 0.0)
 
 
 # ------------------------------------------------------------------ prediction
-def predict(X0, R, k, w, k1, kap):
-    """Returns P (3,), decision, expected costs, herding-time info (or None)."""
+def predict_many(X0, settings):
+    """Class probabilities (n, 3) for one flock under many settings (R, k, w, k1, kap): one model call."""
     if circle:
-        g = k / (w * R**3)
-        F = np.array([[np.log(g), np.hypot(*x) / R, np.cos(np.arctan2(x[1], x[0])), np.sin(np.arctan2(x[1], x[0]))] for x in X0])
-        Pe = M["gp_circle"].predict_proba(M["scaler_circle"].transform(F))      # per evader
-        ps = np.prod(Pe[:, 0]); pl = 1 - np.prod(1 - Pe[:, 2])
-        P = np.array([ps, max(0.0, 1 - ps - pl), pl]); P /= P.sum()
-        time_info = None
-    else:
+        out = []
+        for R, k, w, k1, kap in settings:
+            g = k / (w * R**3)
+            th = np.arctan2(X0[:, 1], X0[:, 0])
+            out.append(np.stack([np.full(len(X0), np.log(g)), np.hypot(X0[:, 0], X0[:, 1]) / R, np.cos(th), np.sin(th)], 1))
+        Pe = M["gp_circle"].predict_proba(M["scaler_circle"].transform(np.vstack(out))).reshape(len(settings), len(X0), 3)
+        ps = np.prod(Pe[:, :, 0], 1); pl = 1 - np.prod(1 - Pe[:, :, 2], 1)
+        P = np.stack([ps, np.clip(1 - ps - pl, 0, None), pl], 1)
+        return P / P.sum(1, keepdims=True), None
+    F = []
+    for R, k, w, k1, kap in settings:
         q, beta, kt = k1 * R, k * k1**3 / w, k1 * kap
         r, p = equilibria(q, beta, 1.0, 1.0, kt)
-        f = np.array([list(run_features(X0 * k1, q, beta, kt, r[0], p[0]).values())])
-        Z = M["scaler"].transform(f)
-        P = M["gp"].predict_proba(Z)[0]
+        F.append(list(run_features(X0 * k1, q, beta, kt, r[0], p[0]).values()))
+    Z = M["scaler"].transform(np.array(F))
+    return M["gp"].predict_proba(Z), Z
+
+
+def predict(X0, R, k, w, k1, kap):
+    """Returns P (3,), Bayes decision, expected costs, herding-time info (or None)."""
+    P, Z = predict_many(X0, [(R, k, w, k1, kap)])
+    P = P[0]
+    time_info = None
+    if Z is not None:
         cure = M["cure"]
         mu = cure.f(Z)[0]; s = cure.sigma; pi = cure.settle_prob(Z)[0]
         time_info = dict(pi=pi, med=np.expm1(mu), lo=np.expm1(mu - 1.645 * s), hi=np.expm1(mu + 1.645 * s))
     cost = P @ M["cost"]
     return P, CLASSES[int(np.argmin(cost))], cost, time_info
+
+
+@st.cache_data(show_spinner="computing the what-if map ...")
+def whatif_map(X0_bytes, n, k, k1, kap, law_circle):
+    X0 = np.frombuffer(X0_bytes).reshape(n, 2)
+    Rs = np.geomspace(max(kap / 0.95 * 1.02, 0.5), 4.0, 22); ws = np.geomspace(0.5, 16, 22)
+    settings = [(RR, k, ww, k1, kap) for ww in ws for RR in Rs]
+    P, _ = predict_many(X0, settings)
+    return Rs, ws, P.reshape(len(ws), len(Rs), 3)
 
 
 P, decision, cost, tinfo = predict(X0, *par)
@@ -113,14 +134,14 @@ with c1:
     lim = 1.15 * R
     fig.update_layout(height=430, xaxis=dict(range=[-lim, lim], scaleanchor="y"), yaxis=dict(range=[-lim, lim]),
                       margin=dict(l=10, r=10, t=30, b=10), title="Start (frame rotating with the pursuer)")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 with c2:
     st.subheader("Prediction (no simulation yet)")
     bar = go.Figure(go.Bar(x=[f"{c}<br>{100 * p:.0f}%" for c, p in zip(CLASSES, P)], y=P,
                            marker_color=[COLORS[c] for c in CLASSES]))
     bar.update_layout(height=230, yaxis=dict(range=[0, 1], title="probability"), margin=dict(l=10, r=10, t=10, b=10))
-    st.plotly_chart(bar, use_container_width=True)
+    st.plotly_chart(bar, width="stretch")
     st.markdown(f"**Bayes decision:** call it **{decision}** "
                 f"(expected cost: success {cost[0]:.2f}, deadlock {cost[1]:.2f}, loss {cost[2]:.2f}; "
                 "calling a real loss 'success' costs 10).")
@@ -173,18 +194,14 @@ with tab1:
                                        args=[None, dict(frame=dict(duration=40, redraw=True), fromcurrent=True)])])],
                           title=f"Real simulation, first {laps_show} laps (fixed frame; goal at the centre)")
         fig.add_trace(go.Scatter(x=[0], y=[0], mode="markers", marker=dict(symbol="x", size=12, color="green"), name="goal"))
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     else:
         st.info("Press **Simulate** to run the real dynamics and compare with the prediction above.")
 
 with tab2:
     st.markdown("Keep this flock, change two pursuer settings. Colour = predicted probability; the star is your setting.")
     which = st.radio("show", ["P(success)", "P(loss)"], horizontal=True)
-    Rs = np.geomspace(max(kap / 0.95 * 1.02, 0.5), 4.0, 22); ws = np.geomspace(0.5, 16, 22)
-    Pm = np.zeros((len(ws), len(Rs), 3))
-    for i, ww in enumerate(ws):
-        for j, RR in enumerate(Rs):
-            Pm[i, j] = predict(X0, RR, k, ww, k1, kap)[0]
+    Rs, ws, Pm = whatif_map(X0.tobytes(), N, k, k1, kap, circle)
     zi = 0 if which == "P(success)" else 2
     hm = go.Figure(go.Heatmap(x=Rs, y=ws, z=Pm[:, :, zi], zmin=0, zmax=1,
                               colorscale="Greens" if zi == 0 else "Reds", colorbar=dict(title=which)))
@@ -193,7 +210,7 @@ with tab2:
         a_line = np.sqrt(np.exp(2 * k1 * kap) / (2 * k1**2))       # a = 2 k1^2 R^2 exp(-2 k1 kappa) = 1
         hm.add_vline(x=a_line, line=dict(color="black", dash="dash"), annotation_text="arXiv condition a = 1")
     hm.update_layout(height=480, xaxis=dict(type="log", title="R (pursuer radius)"), yaxis=dict(type="log", title="w (angular speed)"))
-    st.plotly_chart(hm, use_container_width=True)
+    st.plotly_chart(hm, width="stretch")
 
 with tab3:
     figs = [("results/phase3/map.png", "The learned map agrees with 1,600 fresh simulations on 97 %; evaders are lost even where the paper's condition holds (right of the dashed line)."),
