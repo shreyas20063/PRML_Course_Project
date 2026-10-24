@@ -1,0 +1,176 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\graphicspath{{../results/}}
+\newcommand{\TBD}{\textcolor{red}{TBD}}
+
+\begin{document}
+
+\title{Probabilistic Prediction of Outcome and Herding Time\\in Single-Pursuer Multi-Evader Herding}
+
+\author{\IEEEauthorblockN{Shreyas}
+\IEEEauthorblockA{EE604T Pattern Recognition and Machine Learning, IIT Dharwad}}
+
+\maketitle
+
+\begin{abstract}
+A single pursuer can herd many non-cooperative evaders by circling a goal with a radius that follows one tracked
+evader. Existing theory for this law is local: it guarantees a stable herd near the equilibrium but says nothing
+about which starting configurations end in success, in a stalled herd, or in a lost evader, or how long herding
+takes. We learn this map from 60{,}000 validated simulations with classical, probabilistic machine learning.
+A Gaussian-process (GP) classifier on permutation-invariant features predicts the three-way outcome from the start
+alone with 93.7\,\% balanced accuracy and the best calibrated probabilities of all models, transfers to unseen
+flock sizes, and reveals that evaders are lost even where the stability condition of the theory holds. A kernel
+mixture-cure survival model handles runs that do not settle within the horizon and separates slow from stuck herds,
+which we confirm by re-simulating ten times longer. Finally, we propose a risk-aware active-learning rule that picks
+the next simulation by the Bayes risk of the decision; it reaches the decision cost of random sampling with
+2.3$\times$ fewer simulations, whereas standard entropy sampling improves accuracy but worsens the decision cost.
+\end{abstract}
+
+\section{Introduction}
+Herding many evaders with one pursuer is a hard nonlinear, switched-like control problem. Singh and Chakraborty
+proposed a circular pursuer trajectory~\cite{singh2024cdc} and a feedback variant whose radius follows the evader
+that was farthest at the start~\cite{singh2025arxiv}. Their theorems give existence, uniqueness and local
+asymptotic stability of a common equilibrium ring under a parameter condition, and an inner (Lyapunov-ellipse)
+estimate of the region of attraction for the tracked evader. For the other evaders, the region is only shown by
+brute-force simulation~\cite{singh2025arxiv}.
+
+A practitioner needs more: \emph{given this flock and these settings, will herding succeed, stall, or lose an evader,
+how sure are we, and how long will it take?} We treat this as a pattern-recognition problem with three
+contributions:
+\begin{enumerate}
+\item A validated dataset and calibrated probabilistic predictors (GP classification and regression, Bayes-risk
+decisions) of the outcome and herding time for any flock size, with an analysis of where the local theory fails.
+\item A kernel mixture-cure survival model for herding time with right-censoring, which separates slow herds from
+herds that never settle.
+\item Risk-aware active learning: choosing the next simulation by the Bayes risk of the downstream decision, and the
+finding that the usual uncertainty-based choice optimises the wrong target.
+\end{enumerate}
+GP classification with active learning has estimated regions of attraction of single systems~\cite{wang2023roa}
+and missile capture regions~\cite{lee2022capture}; see also safe ROA learning~\cite{berkenkamp2016}. We add three
+asymmetric-cost outcome classes, many agents with permutation-invariant inputs, censored times, and a decision-driven
+acquisition rule.
+
+\section{System and Data}
+\subsection{Model}
+Evader $i$ at $x_i\in\mathbb{R}^2$ moves away from the pursuer $p$ with speed $k/d_i^2$, $d_i=\|x_i-p\|$; evaders do
+not interact~\cite{singh2024cdc}. The pursuer moves at angular speed $\omega$ with radius
+$R_p(t)=R\,e^{k_1(r_0(t)-\kappa)}$, where $r_0$ is the distance of the tracked evader (farthest at $t=0$) and
+$\kappa=r_0(0)$~\cite{singh2025arxiv}; $k_1=0$ gives the fixed circle of~\cite{singh2024cdc} (our baseline law).
+In the frame rotating with the pursuer the dynamics are autonomous. Scaling lengths by $1/k_1$ and time by $1/\omega$
+leaves two parameters, $q=k_1R$ and $\beta=k k_1^3/\omega$, plus the scaled start; for the circle law only
+$\gamma=k/(\omega R^3)$ remains. The theory's condition is $a=2q^2e^{-2\kappa}>1$ (in scaled units).
+
+\subsection{Labels}
+A run is \emph{loss} if an evader leaves the pursuer circle at $T_{\max}=300$ laps or goes beyond an escape radius;
+\emph{success} if, from some lap $t_s$ on, every evader stays within 1\,\% (radius) and $0.05$\,rad of the common
+equilibrium; otherwise \emph{deadlock}. The herding time is $T_h=t_s$.
+
+\subsection{Simulation and data}
+We wrote our own simulator (RK4 with a step that shrinks during close passes). It reproduces the published ring
+radii~\cite{singh2024cdc}, the equilibrium of the running example of~\cite{singh2025arxiv}, an independent
+loss count for the tracked-index law, and agrees with an adaptive DOP853 solver: 700 of 700 re-simulated runs get the
+same label and herding time. We generated 60{,}000 arXiv-law runs ($N=1..6$, three strata of $a$: $a>1$,
+$6/e^2<a\le1$, $a\le6/e^2$; Latin-hypercube sampling~\cite{mckay1979}; plus boundary sets) and 10{,}000 circle-law
+runs: 26{,}454 success, 16{,}013 deadlock, 17{,}533 loss. A fixed stratified 20\,\% test set is used throughout.
+
+\subsection{Features}
+Only the start is used. Lengths are divided by $\kappa$. Global: $N$, $\log q$, $\log\beta$, $\kappa$, $\log a$,
+$\log(q/\kappa)$, $\log(r^*/\kappa)$. Flock: means, spreads and minima of radii, circular variance, largest angular
+gap, pairwise distances, hull area, angles relative to the pursuer and to the tracked evader, distances to the
+pursuer and to the equilibrium point. All are permutation-invariant and defined for every $N$ (24 features).
+
+\section{Methods}
+\subsection{Classifiers and calibration}
+Baselines: majority class, the theory rule (success iff $a>1$), logistic regression, and an RBF-SVM (with Platt
+scaling~\cite{platt1999} for probabilities). The GP classifier uses one binary GP per class (Laplace approximation,
+one-vs-rest~\cite{rasmussen2006gpml}) with an ARD kernel $\sigma_f^2\exp(-\tfrac12\sum_j (x_j-x'_j)^2/\ell_j^2)$.
+Exact GP cost is $O(n^3)$, so the kernel is tuned by marginal likelihood on 1{,}000 runs and the GP is fitted on
+4{,}000. We cap $\sigma_f^2\le100$: without the cap, three of six random training sets produced an over-confident
+GP (balanced accuracy down to 0.885); with it, seven sets give 0.936--0.938.
+
+\subsection{Bayes-risk decisions}
+With cost matrix $L$ (calling a true loss ``success'' costs 10; loss$\to$deadlock and deadlock$\to$success cost 3;
+other errors 1), the decision is $\hat a(x)=\arg\min_j \sum_i P(i\mid x)\,L_{ij}$.
+
+\subsection{Herding time with censoring}
+Let $y=\log(1+T_h)$ and $c=\log(1+T_{\max})$. With random Fourier features $z(x)$~\cite{rahimi2007rff} of the ARD
+kernel, $f(x)=b+w^\top z(x)$ approximates a GP. The Tobit model~\cite{tobin1958} uses $y\sim\mathcal{N}(f,\sigma^2)$
+for settled runs and $P(y>c)=\Phi((f-c)/\sigma)$ for deadlocks. Our \emph{kernel mixture-cure} model~\cite{farewell1982}
+adds $\pi(x)=\mathrm{sigmoid}(g(x))$, the probability that a run ever settles:
+\begin{equation}
+\mathcal{L}=\prod_{\text{settled}} \pi\,\mathcal{N}(y;f,\sigma^2)\prod_{\text{deadlock}}\big[(1-\pi)+\pi\,\Phi(\tfrac{f-c}{\sigma})\big],
+\end{equation}
+with Gaussian priors on the feature weights (MAP by L-BFGS with analytic gradients).
+
+\subsection{Risk-aware active learning}
+Starting from 200 random runs, the GP repeatedly adds batches from a pool. \emph{Entropy} sampling picks the largest
+predictive entropy~\cite{settles2009}. \emph{Risk-aware} sampling picks the largest Bayes risk of the best decision,
+$r(x)=\min_j\sum_i P(i\mid x)L_{ij}$, i.e.\ where acting is most expensive.
+
+\section{Results}
+\subsection{Outcome prediction}
+\begin{table}[t]
+\centering
+\caption{Test-set results (12{,}000 runs). Bal.\ acc.\ = mean per-class recall.}
+\label{tab:cls}
+\begin{tabular}{lcccc}
+\toprule
+model (training runs) & bal.\ acc. & log-loss & Brier & ECE\\
+\midrule
+theory rule ($a>1$) & 0.457 & -- & -- & --\\
+logistic regression (48k) & 0.825 & 0.482 & 0.258 & 0.039\\
+SVM + Platt (4k) & 0.918 & 0.254 & 0.130 & 0.034\\
+SVM + Platt (20k) & 0.938 & 0.200 & 0.099 & 0.021\\
+GP classifier (4k) & 0.937 & \textbf{0.162} & \textbf{0.092} & 0.028\\
+\bottomrule
+\end{tabular}
+\end{table}
+Table~\ref{tab:cls}: the GP matches the SVM trained on five times more data in accuracy and gives the best
+probabilities. Trained on $N\le4$ and tested on $N=5,6$, the SVM keeps 92.8\,\%. The theory rule reaches only
+45.7\,\%: 52\,\% of successful runs violate $a>1$ and 11\,\% of lost runs satisfy it. Uncertainty is informative:
+answering only the 80\,\% most confident runs raises GP accuracy to 98.6\,\%. The Bayes rule cuts ``loss called
+success'' from 169 to 9 test runs. Fig.~\ref{fig:map} compares the learned map with 1{,}600 fresh simulations
+(97.3\,\% agreement): losses occur right of $a=1$, where the theorems hold, because those theorems are local.
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{phase3/map.png}
+\caption{One 3-evader flock: simulated outcome (left), GP prediction (middle) and GP $P(\text{loss})$ with its
+high-uncertainty contour (right) over $q$ and $\beta$; dashed: $a=1$.}
+\label{fig:map}
+\end{figure}
+
+\subsection{Herding time}
+On settled test runs a GP regression predicts $T_h$ with median error 0.7 laps and 89\,\% coverage of its 90\,\%
+bands. Censoring: \TBD.
+
+\subsection{Unsupervised regimes}
+PCA and a GMM (BIC) on start features do not recover the classes (ARI 0.08), but on trajectory shapes the clusters are
+95\,\% pure and the first two components form one arm per class: the labels are natural regimes, and predicting them
+from the start requires supervision.
+
+\subsection{Risk-aware active learning}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{novelty/active.png}
+\caption{Quality vs number of simulations for three acquisition rules (3 repeats; bands = min to max).}
+\label{fig:active}
+\end{figure}
+Fig.~\ref{fig:active}: risk-aware sampling reaches the decision cost of random sampling at 4{,}000 runs with 1{,}750
+(2.3$\times$ fewer) and ends 22\,\% lower (0.099 vs 0.127). Entropy sampling reaches random's accuracy with 1{,}500
+runs and ends best in accuracy (0.946), yet its decision cost is \emph{worse} than random (0.137): what to simulate
+should follow the decision the model is for.
+
+\subsection{Theory comparison}
+\TBD
+
+\section{Conclusion}
+\TBD
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+\end{document}

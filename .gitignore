@@ -3,3 +3,15 @@ __pycache__/
 .pytest_cache/
 data/raw/pilot.npz
 data/dataset_*.csv
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+slides/*.aux
+slides/*.log
+slides/*.out
+slides/*.nav
+slides/*.snm
+slides/*.toc
+slides/*.vrb

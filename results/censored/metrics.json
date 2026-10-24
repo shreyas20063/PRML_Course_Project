@@ -1,0 +1,51 @@
+{
+ "T_max": 300,
+ "D": 1500,
+ "gp_amplitude": 1.94,
+ "n_train_success": 21164,
+ "n_train_censored": 12810,
+ "prior_scale_mult": 3.0,
+ "seconds_tobit": 191.789475440979,
+ "tobit": {
+  "sigma": 0.39479207022300195,
+  "success_median_abs_err_laps": 2.124066203874751,
+  "success_coverage_90": 0.9504725897920605,
+  "success_mean_loglik": -0.3182607075578701,
+  "deadlock_mean_log_P_over": -0.41590071739543133,
+  "deadlock_frac_P_over_half": 0.9481735872619419,
+  "deadlock_median_pred_laps": 2390.643587711724,
+  "c_index": 0.9745191766304043
+ },
+ "success_only": {
+  "sigma": 0.12659921378900818,
+  "success_median_abs_err_laps": 0.6959215361210622,
+  "success_coverage_90": 0.9147448015122873,
+  "success_mean_loglik": 0.6119864052931779,
+  "deadlock_mean_log_P_over": -68.71925794148198,
+  "deadlock_frac_P_over_half": 0.8482672494536372,
+  "deadlock_median_pred_laps": 885.3542031669806,
+  "c_index": 0.9449775348470454
+ },
+ "seconds_resim": 52.73084044456482,
+ "resim_3000": {
+  "n": 300,
+  "laps": 3000,
+  "settled": 158,
+  "still_deadlock": 137,
+  "lost": 5,
+  "tobit": {
+   "settled_median_abs_err_laps": 322.58264824742724,
+   "settled_median_ratio_err": 1.478140703121875,
+   "settled_coverage_90": 0.7088607594936709,
+   "settled_loglik": -1.5955630880093206,
+   "mean_P_over_Tmax": 0.9425826606074541
+  },
+  "success_only": {
+   "settled_median_abs_err_laps": 108.25015026147389,
+   "settled_median_ratio_err": 1.1552204266915829,
+   "settled_coverage_90": 0.6392405063291139,
+   "settled_loglik": -0.922138862744018,
+   "mean_P_over_Tmax": 0.8922898032184776
+  }
+ }
+}

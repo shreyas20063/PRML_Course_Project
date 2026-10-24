@@ -1,0 +1,62 @@
+{
+ "0.01": {
+  "r_star": 0.010001000300120057,
+  "area_disk_checked": 3.081429112485797,
+  "area_true_converging": 3.0001262466860243,
+  "area_true_success_300": 3.0001262466860243,
+  "ellipse_area_inside_disk": 0.0,
+  "ellipse_false_positive_points": 0,
+  "coverage_ellipse": 0.0,
+  "any_start_disk_radius": 0.0,
+  "coverage_any_start_disk": 0.0,
+  "frac_disk_converging": 0.9736152081284825
+ },
+ "0.03": {
+  "r_star": 0.030027073163527422,
+  "area_disk_checked": 3.081429112485797,
+  "area_true_converging": 2.7870218406766822,
+  "area_true_success_300": 2.7870218406766822,
+  "ellipse_area_inside_disk": 0.0,
+  "ellipse_false_positive_points": 0,
+  "coverage_ellipse": 0.0,
+  "any_start_disk_radius": 0.0,
+  "coverage_any_start_disk": 0.0,
+  "frac_disk_converging": 0.9044575549000328
+ },
+ "0.1": {
+  "r_star": 0.10103125788101082,
+  "area_disk_checked": 3.081429112485797,
+  "area_true_converging": 2.1820477212473173,
+  "area_true_success_300": 2.1820477212473173,
+  "ellipse_area_inside_disk": 0.03837899255144552,
+  "ellipse_false_positive_points": 0,
+  "coverage_ellipse": 0.017588521175653783,
+  "any_start_disk_radius": 0.009539294366539367,
+  "coverage_any_start_disk": 0.0,
+  "frac_disk_converging": 0.7081284824647657
+ },
+ "0.2": {
+  "r_star": 0.20914884844131656,
+  "area_disk_checked": 3.081429112485797,
+  "area_true_converging": 1.4467870218406766,
+  "area_true_success_300": 1.4467870218406766,
+  "ellipse_area_inside_disk": 0.09493750789041787,
+  "ellipse_false_positive_points": 0,
+  "coverage_ellipse": 0.0656195462478185,
+  "any_start_disk_radius": 0.0,
+  "coverage_any_start_disk": 0.0,
+  "frac_disk_converging": 0.4695181907571288
+ },
+ "0.3": {
+  "r_star": 0.3389362415949989,
+  "area_disk_checked": 3.081429112485797,
+  "area_true_converging": 0.7680848377730084,
+  "area_true_success_300": 0.7680848377730084,
+  "ellipse_area_inside_disk": 0.11968185835121828,
+  "ellipse_false_positive_points": 0,
+  "coverage_ellipse": 0.15581854043392504,
+  "any_start_disk_radius": 0.0,
+  "coverage_any_start_disk": 0.0,
+  "frac_disk_converging": 0.24926253687315633
+ }
+}
