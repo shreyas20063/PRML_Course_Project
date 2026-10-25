@@ -63,5 +63,5 @@ What the AI did (all code, runs and drafts): censored herding time (kernel Tobit
 McNemar/Wilcoxon tests, theory comparison (re-solved the paper's Lyapunov-ellipse problem), GMM + PCA regimes,
 the Streamlit demo (headless-tested), the IEEE paper and Beamer slides, viva notes. Problems found and fixed on the way:
 GP over-confidence (variance cap), slow app map (batched), grid-edge settings (wider grids, reported).
-What the student still has to do: put their name in the paper and slides, read and re-derive every result, choose the
+What the student still has to do: read and re-derive every result, choose the
 final cost matrix and label numbers (or keep the defaults), check the overlap question with the guide.
