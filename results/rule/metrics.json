@@ -1,0 +1,104 @@
+{
+ "loss": {
+  "1_features": {
+   "features": [
+    "log_rstar_over_kappa"
+   ],
+   "weights": [
+    0.591852367036825
+   ],
+   "threshold": -0.6514513452913608,
+   "rule": "loss if  +0.592 * log_rstar_over_kappa  > -0.651",
+   "val_balanced_accuracy": 0.7481607119959293,
+   "test_balanced_accuracy": 0.7429799531985128
+  },
+  "2_features": {
+   "features": [
+    "log_beta",
+    "log_q_over_kappa"
+   ],
+   "weights": [
+    0.5236936445068052,
+    -2.4015647795994384
+   ],
+   "threshold": -2.5629710512904462,
+   "rule": "loss if  +0.524 * log_beta + -2.402 * log_q_over_kappa  > -2.563",
+   "val_balanced_accuracy": 0.8136779493737427,
+   "test_balanced_accuracy": 0.8173117860761295
+  },
+  "3_features": {
+   "features": [
+    "log_beta",
+    "log_a",
+    "oth_r_max"
+   ],
+   "weights": [
+    0.6409590095525405,
+    -1.479609526280399,
+    4.435452506281203
+   ],
+   "threshold": 3.350323123808857,
+   "rule": "loss if  +0.641 * log_beta + -1.480 * log_a + +4.435 * oth_r_max  > 3.350",
+   "val_balanced_accuracy": 0.8650067044078509,
+   "test_balanced_accuracy": 0.8617802997225008
+  },
+  "theory_rule": {
+   "rule": "loss if a <= 1",
+   "test_balanced_accuracy": 0.6722912352617266
+  },
+  "gp_classifier": {
+   "test_balanced_accuracy": 0.9383965076860459
+  }
+ },
+ "success": {
+  "1_features": {
+   "features": [
+    "kappa"
+   ],
+   "weights": [
+    -0.9017104604024834
+   ],
+   "threshold": -1.1671602894311428,
+   "rule": "success if  -0.902 * kappa  > -1.167",
+   "val_balanced_accuracy": 0.6536657003797739,
+   "test_balanced_accuracy": 0.6524088697567889
+  },
+  "2_features": {
+   "features": [
+    "kappa",
+    "oth_r_max"
+   ],
+   "weights": [
+    -1.0158736266478656,
+    -2.0048984474317955
+   ],
+   "threshold": -2.707009604846437,
+   "rule": "success if  -1.016 * kappa + -2.005 * oth_r_max  > -2.707",
+   "val_balanced_accuracy": 0.6941121879649839,
+   "test_balanced_accuracy": 0.6915809994957164
+  },
+  "3_features": {
+   "features": [
+    "kappa",
+    "log_rstar_over_kappa",
+    "oth_r_max"
+   ],
+   "weights": [
+    -0.9438205335432014,
+    0.19136053200538874,
+    -2.0379210209278114
+   ],
+   "threshold": -2.9630177563133175,
+   "rule": "success if  -0.944 * kappa + +0.191 * log_rstar_over_kappa + -2.038 * oth_r_max  > -2.963",
+   "val_balanced_accuracy": 0.7088752664780285,
+   "test_balanced_accuracy": 0.7018617643164422
+  },
+  "theory_rule": {
+   "rule": "success if a > 1",
+   "test_balanced_accuracy": 0.6136350958843134
+  },
+  "gp_classifier": {
+   "test_balanced_accuracy": 0.9622035220969183
+  }
+ }
+}
