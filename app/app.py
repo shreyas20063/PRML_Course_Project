@@ -149,6 +149,16 @@ with c2:
         lap = 2 * np.pi / w
         st.markdown(f"**Herding time** (if it settles, probability {tinfo['pi']:.0%}): about **{tinfo['med']:.0f} laps** "
                     f"({tinfo['med'] * lap:.0f} time units), 90 % band {tinfo['lo']:.0f} to {tinfo['hi']:.0f} laps.")
+    cert_path = os.path.join(ROOT, "results", "certificate", "metrics.json")
+    if os.path.exists(cert_path):
+        import json
+        cm = json.load(open(cert_path))
+        tau = cm["circle" if circle else "arxiv"]["tau"]
+        if P[2] <= tau:
+            st.success(f"Inside the CERTIFIED safe set (P(loss) = {P[2]:.3f} <= {tau:.3f}): among such starts, at most 1 % "
+                       "lose an evader, with 95 % confidence (checked on runs the model never saw).")
+        else:
+            st.warning(f"Not certified safe (P(loss) = {P[2]:.3f} > {tau:.3f}).")
     unc = -np.sum(P * np.log(np.clip(P, 1e-12, 1)))
     st.markdown(f"**Model uncertainty (entropy):** {unc:.2f} " + ("- confident" if unc < 0.3 else "- unsure: close to a boundary"))
 

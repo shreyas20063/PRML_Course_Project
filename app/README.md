@@ -19,3 +19,7 @@ Checked headless with `streamlit.testing` (2026-10-24): no exceptions for the ar
 the map and Simulate; first load 13 s (model file), Simulate 2 s, map about 2 s (one batched GP call).
 Demo tip: the default setting (seed 3) is a good opener: the most likely class is "success" (54 %) but the Bayes rule
 says "loss", and the simulation shows a loss.
+
+Certificate badge (added 2026-10-25): the app says whether the start lies inside the statistically certified safe set
+(results/certificate): among such starts at most 1 % lose an evader, with 95 % confidence. For the circle law the
+certificate was calibrated on single-evader runs, so for a flock it is a per-evader statement.
