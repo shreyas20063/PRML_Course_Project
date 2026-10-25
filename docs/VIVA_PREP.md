@@ -66,6 +66,12 @@ wording; the assistant only checks.
   outcomes of the same flocks; Wilcoxon = paired test on times.
 - GMM + PCA: from the start, the classes do not form clusters (ARI 0.08); from the trajectory, they do (purity 95 %).
   ARI = agreement of two groupings corrected for chance (0 = chance, 1 = same).
+- Statistical certificate: pick the starts with P(loss) <= tau; on runs the model never saw, an exact binomial
+  (Clopper-Pearson) bound says the loss rate in that set is <= 1 % with 95 % confidence. It covers 91 % of the
+  successes (theory set a > 1: 48 %, with 8.8 % losses). Difference to a proof: it is about the RATE in the set,
+  not every single start; it can be above 1 % in a sub-group (N = 2: 1.38 %; gamma = 0.3: 1.69 %).
+- Readable rule: lost if 0.64 log(beta) - 1.48 log(a) + 4.44 rho_max > 3.35 (86 % vs 67 % for a <= 1). The theorem's
+  a appears, plus the push strength and an evader near the edge. A conjecture, not a proof.
 - Theory comparison: the paper's Lyapunov ellipse is a guaranteed (sufficient) region; it covers only 0.5-3.7 % of the
   starts that really converge, because near the ring the motion is an almost undamped rotation.
 

@@ -18,6 +18,8 @@ Status (2026-10-24): all parts done; see the paper `paper/main.pdf` and slides `
 | censored time (cure model) | slow vs stuck herds predicted beyond the horizon: AUC 0.98 on 10x longer re-simulation |
 | risk-aware active learning | same decision cost as random sampling with 2.3x fewer simulations |
 | choosing settings | risk-aware GP choice: 0 % loss like the theory rule, 2.3x faster herding (Wilcoxon p = 9e-24) |
+| statistical certificate | loss <= 1 % at 95 % confidence: covers 91 % of successes (theory set a > 1: 48 %, 8.8 % loss); circle law 77-98 % vs Lyapunov 0.5-3.7 % |
+| readable rule | lost if 0.64 log(beta) - 1.48 log(a) + 4.44 rho_max > 3.35: 86 % vs 67 % for a <= 1 |
 | regimes (GMM + PCA) | invisible in start features (ARI 0.08), natural in trajectories (cluster purity 0.95) |
 
 ## Quick start

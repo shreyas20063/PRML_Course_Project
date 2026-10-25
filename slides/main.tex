@@ -48,6 +48,24 @@
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Headline: the proof certifies 0.5--3.7\,\%, the data certifies 77--98\,\%}
+\centering\includegraphics[width=\textwidth]{certificate/certificate.png}
+\begin{itemize}
+\item Data certificate: loss rate $\le$ 1\,\% with 95\,\% confidence (exact Clopper--Pearson bound on unseen runs).
+\item arXiv law, test set: certified set \textbf{0.66\,\% loss, 91\,\% of successes}; the theorem's set $a>1$: 8.8\,\% loss, 48\,\%.
+\item Honest: a guarantee on rates, not on every start (above 1\,\% at $\gamma=0.3$ and for $N=2$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{A readable rule: a conjecture for the theory}
+\begin{itemize}
+\item Best 3-number rule for ``an evader is lost'' (86\,\% vs 67\,\% for the theorem's $a\le1$):
+\[0.64\log\beta-1.48\log a+4.44\,\rho_{\max}>3.35\]
+\item The theorem's own $a$ appears, corrected for the push strength $\beta$ and an evader near the edge ($\rho_{\max}$).
+\item Two numbers: lost if $q/\kappa < 2.9\,\beta^{0.22}$ (82\,\%).
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Data: 70{,}000 checked simulations}
 \begin{itemize}
 \item Own simulator; checked against both papers' numbers and an accurate solver: \textbf{700/700} identical labels.
@@ -169,6 +187,7 @@ set kernel & 93.6\,\% & \textbf{93.8\,\%}\\
 \begin{frame}{Summary}
 \begin{itemize}
 \item Calibrated, uncertainty-aware prediction of outcome and herding time, for any flock size.
+\item Statistical certificate: 77--98\,\% of the true safe region vs 0.5--3.7\,\% for the proof.
 \item Shows where the local theory stops protecting the evaders.
 \item Censored survival model separates slow from stuck herds.
 \item Risk-aware active learning: choose simulations by the decision you will make.
