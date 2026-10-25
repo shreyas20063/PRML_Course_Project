@@ -132,4 +132,4 @@ if __name__ == "__main__":
         ax.set_title(f"gamma = {g}\ndata {r['learned_coverage_of_converging']:.0%} vs theory {r['lyapunov_coverage_of_converging']:.1%}", fontsize=9)
     axes[0].legend(fontsize=6, loc="lower left", markerscale=3)
     fig.suptitle("How much of the true safe region is certified: statistical certificate (green) vs Lyapunov proof (blue)", fontsize=10)
-    fig.tight_layout(); fig.savefig(os.path.join(OUT, "certificate.png"), dpi=130)
+    fig.tight_layout(rect=[0, 0, 1, 0.9]); fig.savefig(os.path.join(OUT, "certificate.png"), dpi=130)

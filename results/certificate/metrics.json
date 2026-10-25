@@ -1,0 +1,112 @@
+{
+ "eps": 0.01,
+ "delta": 0.05,
+ "arxiv": {
+  "tau": 0.21718413512021068,
+  "calibration": {
+   "n_in_set": 7794,
+   "losses": 63,
+   "cp_upper": 0.009960094564944223
+  },
+  "test": {
+   "n_in_set": 7733,
+   "frac_of_all_in_set": 0.6444166666666666,
+   "loss_rate_in_set": 0.006595111858269753,
+   "coverage_of_true_success": 0.9085066162570888,
+   "coverage_of_not_lost": 0.904509596137996
+  },
+  "theory_set_a_gt_1": {
+   "loss_rate_in_set": 0.08841754051477597,
+   "coverage_of_true_success": 0.47674858223062383
+  },
+  "test_by_N": {
+   "1": {
+    "n_in_set": 2001,
+    "frac_of_all_in_set": 1.0,
+    "loss_rate_in_set": 0.0,
+    "coverage_of_true_success": 1.0,
+    "coverage_of_not_lost": 1.0
+   },
+   "2": {
+    "n_in_set": 1229,
+    "frac_of_all_in_set": 0.6148074037018509,
+    "loss_rate_in_set": 0.013832384052074858,
+    "coverage_of_true_success": 0.8419161676646707,
+    "coverage_of_not_lost": 0.849334267694464
+   },
+   "3": {
+    "n_in_set": 1148,
+    "frac_of_all_in_set": 0.5751503006012024,
+    "loss_rate_in_set": 0.0078397212543554,
+    "coverage_of_true_success": 0.8873994638069705,
+    "coverage_of_not_lost": 0.874136607828089
+   },
+   "4": {
+    "n_in_set": 1131,
+    "frac_of_all_in_set": 0.5683417085427136,
+    "loss_rate_in_set": 0.009725906277630416,
+    "coverage_of_true_success": 0.8775790921595599,
+    "coverage_of_not_lost": 0.8839779005524862
+   },
+   "5": {
+    "n_in_set": 1119,
+    "frac_of_all_in_set": 0.5572709163346613,
+    "loss_rate_in_set": 0.008936550491510277,
+    "coverage_of_true_success": 0.8746556473829201,
+    "coverage_of_not_lost": 0.8822593476531424
+   },
+   "6": {
+    "n_in_set": 1105,
+    "frac_of_all_in_set": 0.5508474576271186,
+    "loss_rate_in_set": 0.0036199095022624436,
+    "coverage_of_true_success": 0.8769230769230769,
+    "coverage_of_not_lost": 0.8893376413570274
+   }
+  }
+ },
+ "circle": {
+  "tau": 0.30853817084433144,
+  "calibration": {
+   "n_in_set": 2887,
+   "losses": 17,
+   "cp_upper": 0.008819425521089462
+  },
+  "per_gamma": {
+   "0.01": {
+    "learned_coverage_of_converging": 0.9782864837569433,
+    "learned_loss_rate_in_set": 0.0,
+    "learned_false_positives": 0,
+    "n_in_set": 5812,
+    "lyapunov_coverage_of_converging": 0.005217976771587275
+   },
+   "0.03": {
+    "learned_coverage_of_converging": 0.9795252763181735,
+    "learned_loss_rate_in_set": 0.0005546311702717693,
+    "learned_false_positives": 3,
+    "n_in_set": 5409,
+    "lyapunov_coverage_of_converging": 0.005979344084073202
+   },
+   "0.1": {
+    "learned_coverage_of_converging": 0.9706086554038417,
+    "learned_loss_rate_in_set": 0.006867156050201279,
+    "learned_false_positives": 29,
+    "n_in_set": 4223,
+    "lyapunov_coverage_of_converging": 0.009488544318444805
+   },
+   "0.2": {
+    "learned_coverage_of_converging": 0.9246073298429319,
+    "learned_loss_rate_in_set": 0.008978675645342313,
+    "learned_false_positives": 24,
+    "n_in_set": 2673,
+    "lyapunov_coverage_of_converging": 0.01605584642233857
+   },
+   "0.3": {
+    "learned_coverage_of_converging": 0.7666009204470743,
+    "learned_loss_rate_in_set": 0.016863406408094434,
+    "learned_false_positives": 20,
+    "n_in_set": 1186,
+    "lyapunov_coverage_of_converging": 0.036817882971729124
+   }
+  }
+ }
+}
